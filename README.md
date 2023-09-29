@@ -14,6 +14,7 @@ ASP .NET Core [Web API]
 - Framework: .NET Framework 6
 - IDE: Rider 2023.2.2
 - Penyimpanan Data: SQL Server Management Studio
+- Package Manager: `NuGet EntityFrameworkCore`, `NuGet EntityFrameworkCore.SqlServer`, `NuGet EntityFrameworkCore.Tools`
 
 **Migration**:
 - `dotnet ef migrations add InitialCreate` atau `dotnet ef migrations add InitialCreate --project path\to\YourProject.csproj` (digunakan untuk menambahkan migrasi)
