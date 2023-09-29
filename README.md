@@ -22,5 +22,7 @@ ASP .NET Core [Web API]
 - `dotnet ef get migrations` atau `dotnet ef get migrations --project path\to\YourProject.csproj` (digunakan untuk melihat migrasi yang sudah ada)
 - `dotnet ef remove migrations` atau `dotnet ef remove migrations --project path\to\YourProject.csproj` (digunakan untuk menghapus migrasi)
 
+**Diagram Database**:
+![img.png](img.png)
 
 **Status Proyek**: Proyek ini sedang dalam pengembangan aktif.
