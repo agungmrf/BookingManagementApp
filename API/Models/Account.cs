@@ -13,4 +13,12 @@ public class Account : BaseEntity
     public bool IsUsed { get; set; }
     [Column("expired_date")]
     public DateTime ExpiredDate { get; set; }
+    
+    // Cardinality.
+    // One Account has many AccountRoles.
+    public ICollection<AccountRole>? AccountRoles { get; set; }
+    
+    // One Account has one Employee.
+    public Employee? Employee { get; set; }
+    
 }

@@ -22,4 +22,14 @@ public class Employee : BaseEntity
     public string Email { get; set; } 
     [Column("phone_number", TypeName = "nvarchar(20)")]
     public string PhoneNumber { get; set; }
+    
+    // Cardinality.
+    // One Employee has many Bookings.
+    public ICollection<Booking>? Bookings { get; set; }
+    
+    // One Employee has one Education.
+    public Education? Education { get; set; }
+    
+    // One Employee has one Account.
+    public Account? Account { get; set; }
 }

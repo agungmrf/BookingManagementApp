@@ -9,4 +9,8 @@ public class University : BaseEntity
     public string Code { get; set; }
     [Column("name", TypeName = "nvarchar(100)")]
     public string Name { get; set; }
+    
+    // Cardinality.
+    // One University has many Educations.
+    public ICollection<Education>? Educations { get; set; }
 }

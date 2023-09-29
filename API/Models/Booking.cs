@@ -18,4 +18,11 @@ public class Booking : BaseEntity
     public Guid RoomGuid { get; set; } // Foreign Key.
     [Column("employee_guid")]
     public Guid EmployeeGuid { get; set; } // Foreign Key.
+    
+    // Cardinality.
+    // One Booking has one Room.
+    public Room? Room { get; set; }
+    
+    // One Booking has one Employee.
+    public Employee? Employee { get; set; }
 }

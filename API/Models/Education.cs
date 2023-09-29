@@ -13,4 +13,11 @@ public class Education : BaseEntity
     public float Gpa { get; set; }
     [Column("university_guid")]
     public Guid UniversityGuid { get; set; } // Foreign Key.
+    
+    // Cardinality.
+    // One Education has one University.
+    public University? University { get; set; }
+    
+    // One Education has one Employee.
+    public Employee? Employee { get; set; }
 }
