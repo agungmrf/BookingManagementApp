@@ -12,19 +12,13 @@ ASP .NET Core [Web API]
 **Teknologi yang Digunakan**:
 - Bahasa pemrograman: C Sharp / C#
 - Framework: .NET Framework 6
-- Penyimpanan Data: SQL
+- Penyimpanan Data: SQL Server Management Studio
 
-<!--
-**Cara Menggunakan**:
-1. Klon/unduh repositori ini.
-2. Instal dependensi dengan `npm install`.
-3. Konfigurasi Firebase dengan kredensial Anda.
-4. Jalankan aplikasi dengan `npm start`.
+**Migration**:
+- `dotnet ef migrations add InitialCreate` atau `dotnet ef migrations add InitialCreate --project path\to\YourProject.csproj` (digunakan untuk menambahkan migrasi)
+- `dotnet ef migrations update` atau `dotnet ef migrations update --project path\to\YourProject.csproj` (digunakan untuk mengupdate migrasi)
+- `dotnet ef get migrations` atau `dotnet ef get migrations --project path\to\YourProject.csproj` (digunakan untuk melihat migrasi yang sudah ada)
+- `dotnet ef remove migrations` atau `dotnet ef remove migrations --project path\to\YourProject.csproj` (digunakan untuk menghapus migrasi)
 
-**Contoh Penggunaan**: 
-- Manajemen pekerjaan rumah tangga.
-- Membagi daftar belanja dengan anggota keluarga.
-- Kolaborasi dalam proyek tim.
--->
 
 **Status Proyek**: Proyek ini sedang dalam pengembangan aktif.
