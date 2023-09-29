@@ -12,6 +12,7 @@ ASP .NET Core [Web API]
 **Teknologi yang Digunakan**:
 - Bahasa pemrograman: C Sharp / C#
 - Framework: .NET Framework 6
+- IDE: Rider 2023.2.2
 - Penyimpanan Data: SQL Server Management Studio
 
 **Migration**:
