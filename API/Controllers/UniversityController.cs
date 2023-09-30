@@ -62,18 +62,20 @@ public class UniversityController : ControllerBase
         {
             return BadRequest("Data Not Updated");
         }
-        return Ok(result);
+        return Ok("Data Updated");
     }
     
     // Untuk menangani request DELETE dengan route /api/[controller].
     [HttpDelete]
-    public IActionResult Delete(University university)
+    public IActionResult Delete(Guid guid)
     {
+        var university = _universityRepository.GetByGuid(guid);
         var result = _universityRepository.Delete(university);
+        
         if (!result)
         {
             return BadRequest("Data Not Deleted");
         }
-        return Ok(result);
+        return Ok("Data Deleted");
     }
 }
