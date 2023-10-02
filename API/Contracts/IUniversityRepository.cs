@@ -2,11 +2,9 @@ using API.Models;
 
 namespace API.Contracts;
 
-public interface IUniversityRepository // Interface repository untuk model University.
+// Interface repository untuk model University yang mengimplementasi interface IGeneralRepository.
+// Memanggil <University> karena IGeneralRepository membutuhkan TEntity sebagai sebuah model.
+public interface IUniversityRepository : IGeneralRepository<University>
 {
-    IEnumerable<University> GetAll(); // IEnumerable untuk menampung banyak data.
-    University? GetByGuid(Guid guid);
-    University? Create(University university);
-    bool Update(University university);
-    bool Delete(University university);
+    
 }

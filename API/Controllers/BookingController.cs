@@ -4,22 +4,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[ApiController] // Untuk menandakan bahwa controller ini adalah controller API.
-[Route("api/[controller]")] // Untuk menandakan bahwa controller ini dapat diakses melalui route /api/[controller].
-public class UniversityController : ControllerBase
+[ApiController] // Untuk menunjukkan bahwa ini adalah controller API
+[Route("api/[controller]")] // Untuk menunjukkan route dari controller ini
+public class BookingController : ControllerBase // ControllerBase untuk controller tanpa view
 {
-    private readonly IUniversityRepository _universityRepository; // Untuk menyimpan instance dari IUniversityRepository.
+    private readonly IBookingRepository _bookingRepository;
 
-    public UniversityController(IUniversityRepository universityRepository)
+    public BookingController(IBookingRepository bookingRepository)
     {
-        _universityRepository = universityRepository;
+        _bookingRepository = bookingRepository;
     }
 
     // Untuk menangani request GET dengan route /api/[controller].
     [HttpGet]
     public IActionResult GetAll()
     {
-        var result = _universityRepository.GetAll();
+        var result = _bookingRepository.GetAll();
         if (!result.Any())
         {
             return NotFound("Data Not Found");
@@ -27,12 +27,12 @@ public class UniversityController : ControllerBase
 
         return Ok(result);
     }
-    
+
     // Untuk menangani request GET dengan route /api/[controller]/guid.
     [HttpGet("{guid}")]
     public IActionResult GetByGuid(Guid guid)
     {
-        var result = _universityRepository.GetByGuid(guid);
+        var result = _bookingRepository.GetByGuid(guid);
         if (result is null)
         {
             return NotFound("Data Not Found");
@@ -40,42 +40,45 @@ public class UniversityController : ControllerBase
 
         return Ok(result);
     }
-    
+
     // Untuk menangani request POST dengan route /api/[controller].
     [HttpPost]
-    public IActionResult Create(University university)
+    public IActionResult Create(Booking booking)
     {
-        var result = _universityRepository.Create(university);
+        var result = _bookingRepository.Create(booking);
         if (result is null)
         {
             return BadRequest("Data Not Created");
         }
+
         return Ok(result);
     }
-    
+
     // Untuk menangani request PUT dengan route /api/[controller].
     [HttpPut]
-    public IActionResult Update(University university)
+    public IActionResult Update(Booking booking)
     {
-        var result = _universityRepository.Update(university);
+        var result = _bookingRepository.Update(booking);
         if (!result)
         {
             return BadRequest("Data Not Updated");
         }
+
         return Ok("Data has been updated successfully");
     }
-    
-    // Untuk menangani request DELETE dengan route /api/[controller].
+
+    // Untuk menangani request DELETE dengan route /api/[controller]/guid.
     [HttpDelete]
     public IActionResult Delete(Guid guid)
     {
-        var university = _universityRepository.GetByGuid(guid);
-        var result = _universityRepository.Delete(university);
+        var booking = _bookingRepository.GetByGuid(guid);
+        var result = _bookingRepository.Delete(booking);
         
         if (!result)
         {
             return BadRequest("Data Not Deleted");
         }
+        
         return Ok("Data has been deleted successfully");
     }
 }
