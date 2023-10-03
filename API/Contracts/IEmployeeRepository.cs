@@ -6,5 +6,5 @@ namespace API.Contracts;
 // Memanggil <Employee> karena IGeneralRepository membutuhkan TEntity sebagai sebuah model.
 public interface IEmployeeRepository : IGeneralRepository<Employee>
 {
-    
+    string GetLastNik(); // Method untuk mendapatkan NIK terakhir
 }

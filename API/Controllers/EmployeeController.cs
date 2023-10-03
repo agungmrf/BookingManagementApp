@@ -1,6 +1,7 @@
 using API.Contracts;
 using API.DTOs.Employees;
 using API.Models;
+using API.Utilities.Handler;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -47,7 +48,10 @@ public class EmployeeController : ControllerBase // ControllerBase untuk control
     [HttpPost]
     public IActionResult Create(CreateEmployeeDto createEmployeeDto)
     {
-        var result = _employeeRepository.Create(createEmployeeDto);
+        Employee toCreate = createEmployeeDto;
+        toCreate.Nik = GenerateHandler.Nik(_employeeRepository.GetLastNik()); // Generate NIK baru dengan memanggil method Nik dari class GenerateHandler.
+        
+        var result = _employeeRepository.Create(toCreate);
         if (result is null)
         {
             return BadRequest("Data Not Created");
