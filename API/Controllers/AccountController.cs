@@ -59,7 +59,16 @@ public class AccountController : ControllerBase // Controller is for MVC
     [HttpPut]
     public IActionResult Update(AccountDto accountDto)
     {
-        var result = _accountRepository.Update(accountDto);
+        var entity = _accountRepository.GetByGuid(accountDto.Guid);
+        if(entity is null)
+        {
+            return NotFound("Id Not Found");
+        }
+        
+        Account toUpdate = accountDto;
+        toUpdate.CreatedDate = entity.CreatedDate;
+        
+        var result = _accountRepository.Update(toUpdate);
         if (!result)
         {
             return BadRequest("Data Not Updated");

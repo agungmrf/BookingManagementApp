@@ -59,7 +59,16 @@ public class RoomController : ControllerBase // ControllerBase untuk controller 
     [HttpPut]
     public IActionResult Update(RoomDto roomDto)
     {
-        var result = _roomRepository.Update(roomDto);
+        var entity = _roomRepository.GetByGuid(roomDto.Guid);
+        if (entity is null)
+        {
+            return NotFound("Id Not Found");
+        }
+        
+        Room toUpdate = roomDto;
+        toUpdate.CreatedDate = entity.CreatedDate;
+        
+        var result = _roomRepository.Update(toUpdate);
         if (!result)
         {
             return BadRequest("Data Not Updated");

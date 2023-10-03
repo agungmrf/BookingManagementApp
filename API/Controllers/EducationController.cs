@@ -51,7 +51,7 @@ public class EducationController : ControllerBase // ControllerBase untuk contro
         var result = _educationRepository.Create(createEducationDto);
         if (result is null)
         {
-            return BadRequest("Data Not Created");
+            return BadRequest("Data Not Created"); 
         }
         return Ok((EducationDto)result);
     }
@@ -60,7 +60,16 @@ public class EducationController : ControllerBase // ControllerBase untuk contro
     [HttpPut]
     public IActionResult Update(EducationDto educationDto)
     {
-        var result = _educationRepository.Update(educationDto);
+        var entity = _educationRepository.GetByGuid(educationDto.Guid);
+        if (entity is null)
+        {
+            return NotFound("Id Not Found");
+        }
+        
+        Education toUpdate = educationDto;
+        toUpdate.CreatedDate = entity.CreatedDate;
+        
+        var result = _educationRepository.Update(toUpdate);
         if (!result)
         {
             return BadRequest("Data Not Updated");

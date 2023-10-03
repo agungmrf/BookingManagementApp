@@ -59,7 +59,16 @@ public class EmployeeController : ControllerBase // ControllerBase untuk control
     [HttpPut]
     public IActionResult Update(EmployeeDto employeeDto)
     {
-        var result  = _employeeRepository.Update(employeeDto);
+        var entity = _employeeRepository.GetByGuid(employeeDto.Guid);
+        if (entity is null)
+        {
+            return NotFound("Id Not Found");
+        }
+        
+        Employee toUpdate = employeeDto;
+        toUpdate.CreatedDate = entity.CreatedDate;
+        
+        var result = _employeeRepository.Update(toUpdate);
         if (!result)
         {
             return BadRequest("Data Not Updated");

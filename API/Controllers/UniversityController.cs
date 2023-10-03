@@ -60,10 +60,19 @@ public class UniversityController : ControllerBase
     [HttpPut]
     public IActionResult Update(UniversityDto universityDto)
     {
-        var result = _universityRepository.Update(universityDto);
-        if (!result)
+        var entity = _universityRepository.GetByGuid(universityDto.Guid);
+        if (entity is null)
         {
-            return BadRequest("Data Not Updated");
+            return NotFound("Id Not Found");
+        }
+        
+        University toUpdate = universityDto;
+        toUpdate.CreatedDate = entity.CreatedDate; 
+        
+        var result = _universityRepository.Update(toUpdate); 
+        if(!result)
+        {
+            return BadRequest("Data Not Updated"); 
         }
 
         return Ok("Data has been updated successfully");

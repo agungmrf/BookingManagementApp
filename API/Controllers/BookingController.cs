@@ -59,7 +59,16 @@ public class BookingController : ControllerBase // ControllerBase untuk controll
     [HttpPut]
     public IActionResult Update(BookingDto bookingDto)
     {
-        var result = _bookingRepository.Update(bookingDto);
+        var entity = _bookingRepository.GetByGuid(bookingDto.Guid);
+        if (entity is null)
+        {
+            return NotFound("Id Not Found");
+        }
+        
+        Booking toUpdate = bookingDto;
+        toUpdate.CreatedDate = entity.CreatedDate;
+        
+        var result = _bookingRepository.Update(toUpdate);
         if (!result)
         {
             return BadRequest("Data Not Updated");

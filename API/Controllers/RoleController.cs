@@ -60,7 +60,16 @@ public class RoleController : ControllerBase // ControllerBase untuk controller 
     [HttpPut]
     public IActionResult Update(RoleDto roleDto)
     {
-        var result  = _roleRepository.Update(roleDto);
+        var entity = _roleRepository.GetByGuid(roleDto.Guid);
+        if (entity is null)
+        {
+            return NotFound("Id Not Found");
+        }
+        
+        Role toUpdate = roleDto;
+        toUpdate.CreatedDate = entity.CreatedDate;
+        
+        var result = _roleRepository.Update(toUpdate);
         if (!result)
         {
             return BadRequest("Data Not Updated");
