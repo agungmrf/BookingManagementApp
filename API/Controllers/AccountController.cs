@@ -1,6 +1,7 @@
 using API.Contracts;
 using API.DTOs.Accounts;
 using API.Models;
+using API.Utilities.Handler;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -47,7 +48,10 @@ public class AccountController : ControllerBase // Controller is for MVC
     [HttpPost]
     public IActionResult Create(CreateAccountDto createAccountDto)
     {
-        var result = _accountRepository.Create(createAccountDto);
+        Account toCreate = createAccountDto;
+        toCreate.Password = HashingHandler.HashPassword(createAccountDto.Password);
+        
+        var result = _accountRepository.Create(toCreate);
         if (result is null)
         {
             return BadRequest("Data Not Created");
@@ -67,6 +71,7 @@ public class AccountController : ControllerBase // Controller is for MVC
         
         Account toUpdate = accountDto;
         toUpdate.CreatedDate = entity.CreatedDate;
+        toUpdate.Password = HashingHandler.HashPassword(accountDto.Password);
         
         var result = _accountRepository.Update(toUpdate);
         if (!result)
