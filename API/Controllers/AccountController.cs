@@ -1,4 +1,5 @@
 using API.Contracts;
+using API.DTOs.Accounts;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,8 +25,9 @@ public class AccountController : ControllerBase // Controller is for MVC
         {
             return NotFound("Data Not Found");
         }
-
-        return Ok(result);
+        
+        var data = result.Select(x => (AccountDto)x);
+        return Ok(data);
     }
     
     // Untuk menangani request GET dengan route /api/[controller]/guid.
@@ -37,32 +39,31 @@ public class AccountController : ControllerBase // Controller is for MVC
         {
             return NotFound("Data Not Found");
         }
-
-        return Ok(result);
+        
+        return Ok((AccountDto)result);
     }
     
     // Untuk menangani request POST dengan route /api/[controller].
     [HttpPost]
-    public IActionResult Create(Account account)
+    public IActionResult Create(CreateAccountDto createAccountDto)
     {
-        var result = _accountRepository.Create(account);
+        var result = _accountRepository.Create(createAccountDto);
         if (result is null)
         {
             return BadRequest("Data Not Created");
         }
-        return Ok(result);
+        return Ok((AccountDto)result);
     }
 
     // Untuk menangani request PUT dengan route /api/[controller].
     [HttpPut]
-    public IActionResult Update(Account account)
+    public IActionResult Update(AccountDto accountDto)
     {
-        var result = _accountRepository.Update(account);
+        var result = _accountRepository.Update(accountDto);
         if (!result)
         {
             return BadRequest("Data Not Updated");
         }
-
         return Ok("Data has been updated successfully");
     }
     

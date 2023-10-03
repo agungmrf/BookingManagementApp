@@ -70,9 +70,15 @@ public class BookingManagementDbContext: DbContext
             .HasForeignKey(b => b.EmployeeGuid);
         
         // One Account has one Employee.
-        modelBuilder.Entity<Account>()
+        /*modelBuilder.Entity<Account>()
             .HasOne(e => e.Employee)
             .WithOne(e => e.Account)
+            .HasForeignKey<Account>(e => e.Guid);*/
+        
+        // One Employee has one Account
+        modelBuilder.Entity<Employee>()
+            .HasOne(e => e.Account)
+            .WithOne(e => e.Employee)
             .HasForeignKey<Account>(e => e.Guid);
     }
 }

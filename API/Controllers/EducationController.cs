@@ -1,4 +1,5 @@
 using API.Contracts;
+using API.DTOs.Educations;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,8 +25,10 @@ public class EducationController : ControllerBase // ControllerBase untuk contro
         {
             return NotFound("Data Not Found");
         }
-
-        return Ok(result);
+        
+        var data = result.Select(x => (EducationDto)x);
+        
+        return Ok(data);
     }
     
     // Untuk menangani request GET dengan route /api/[controller]/guid.
@@ -38,26 +41,26 @@ public class EducationController : ControllerBase // ControllerBase untuk contro
             return NotFound("Data Not Found");
         }
 
-        return Ok(result);
+        return Ok((EducationDto)result);
     }
     
     // Untuk menangani request POST dengan route /api/[controller].
     [HttpPost]
-    public IActionResult Create(Education education)
+    public IActionResult Create(CreateEducationDto createEducationDto)
     {
-        var result = _educationRepository.Create(education);
+        var result = _educationRepository.Create(createEducationDto);
         if (result is null)
         {
             return BadRequest("Data Not Created");
         }
-        return Ok(result);
+        return Ok((EducationDto)result);
     }
     
     // Untuk menangani request PUT dengan route /api/[controller].
     [HttpPut]
-    public IActionResult Update(Education education)
+    public IActionResult Update(EducationDto educationDto)
     {
-        var result  = _educationRepository.Update(education);
+        var result = _educationRepository.Update(educationDto);
         if (!result)
         {
             return BadRequest("Data Not Updated");

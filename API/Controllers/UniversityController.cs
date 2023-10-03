@@ -1,4 +1,5 @@
 using API.Contracts;
+using API.DTOs.Universities;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,9 @@ public class UniversityController : ControllerBase
             return NotFound("Data Not Found");
         }
 
-        return Ok(result);
+        var data = result.Select(x => (UniversityDto)x);
+
+        return Ok(data);
     }
     
     // Untuk menangani request GET dengan route /api/[controller]/guid.
@@ -38,30 +41,31 @@ public class UniversityController : ControllerBase
             return NotFound("Data Not Found");
         }
 
-        return Ok(result);
+        return Ok((UniversityDto)result);
     }
     
     // Untuk menangani request POST dengan route /api/[controller].
     [HttpPost]
-    public IActionResult Create(University university)
+    public IActionResult Create(CreateUniversityDto createUniversityDto)
     {
-        var result = _universityRepository.Create(university);
+        var result = _universityRepository.Create(createUniversityDto);
         if (result is null)
         {
             return BadRequest("Data Not Created");
         }
-        return Ok(result);
+        return Ok((UniversityDto) result);
     }
     
     // Untuk menangani request PUT dengan route /api/[controller].
     [HttpPut]
-    public IActionResult Update(University university)
+    public IActionResult Update(UniversityDto universityDto)
     {
-        var result = _universityRepository.Update(university);
+        var result = _universityRepository.Update(universityDto);
         if (!result)
         {
             return BadRequest("Data Not Updated");
         }
+
         return Ok("Data has been updated successfully");
     }
     

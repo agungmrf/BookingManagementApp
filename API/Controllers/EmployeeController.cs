@@ -1,4 +1,5 @@
 using API.Contracts;
+using API.DTOs.Employees;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,8 @@ public class EmployeeController : ControllerBase // ControllerBase untuk control
             return NotFound("Data Not Found");
         }
 
-        return Ok(result);
+        var data = result.Select(x => (EmployeeDto)x);
+        return Ok(data);
     }
     
     // Untuk menangani request GET dengan route api/[controller]/guid
@@ -38,26 +40,26 @@ public class EmployeeController : ControllerBase // ControllerBase untuk control
             return NotFound("Data Not Found");
         }
 
-        return Ok(result);
+        return Ok((EmployeeDto)result);
     }
     
     // Untuk menangani request POST dengan route api/[controller]
     [HttpPost]
-    public IActionResult Create(Employee employee)
+    public IActionResult Create(CreateEmployeeDto createEmployeeDto)
     {
-        var result = _employeeRepository.Create(employee);
+        var result = _employeeRepository.Create(createEmployeeDto);
         if (result is null)
         {
             return BadRequest("Data Not Created");
         }
-        return Ok(result);
+        return Ok((EmployeeDto)result);
     }
     
     // Untuk menangani request PUT dengan route api/[controller]
     [HttpPut]
-    public IActionResult Update(Employee employee)
+    public IActionResult Update(EmployeeDto employeeDto)
     {
-        var result  = _employeeRepository.Update(employee);
+        var result  = _employeeRepository.Update(employeeDto);
         if (!result)
         {
             return BadRequest("Data Not Updated");

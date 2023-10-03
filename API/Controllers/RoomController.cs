@@ -1,4 +1,5 @@
 using API.Contracts;
+using API.DTOs.Rooms;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,8 @@ public class RoomController : ControllerBase // ControllerBase untuk controller 
             return NotFound("Data Not Found");
         }
 
-        return Ok(result);
+        var data = result.Select(x => (RoomDto)x);
+        return Ok(data);
     }
     
     // Untuk menangani request GET dengan route api/[controller]/guid
@@ -38,33 +40,34 @@ public class RoomController : ControllerBase // ControllerBase untuk controller 
             return NotFound("Data Not Found");
         }
 
-        return Ok(result);
+        return Ok((RoomDto)result);
     }
     
     // Untuk menangani request POST dengan route api/[controller]
     [HttpPost]
-    public IActionResult Create(Room room)
+    public IActionResult Create(CreateRoomDto createRoomDto)
     {
-        var result = _roomRepository.Create(room);
+        var result = _roomRepository.Create(createRoomDto);
         if (result is null)
         {
             return BadRequest("Data Not Created");
         }
-        return Ok(result);
+        return Ok((RoomDto) result);
     }
     
     // Untuk menangani request PUT dengan route api/[controller]
     [HttpPut]
-    public IActionResult Update(Room room)
+    public IActionResult Update(RoomDto roomDto)
     {
-        var result  = _roomRepository.Update(room);
+        var result = _roomRepository.Update(roomDto);
         if (!result)
         {
             return BadRequest("Data Not Updated");
         }
+
         return Ok("Data has been updated successfully");
     }
-    
+
     // Untuk menangani request DELETE dengan route api/[controller]
     [HttpDelete]
     public IActionResult Delete(Guid guid)

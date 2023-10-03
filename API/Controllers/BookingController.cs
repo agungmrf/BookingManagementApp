@@ -1,4 +1,5 @@
 using API.Contracts;
+using API.DTOs.Bookings;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,8 @@ public class BookingController : ControllerBase // ControllerBase untuk controll
             return NotFound("Data Not Found");
         }
 
-        return Ok(result);
+        var data = result.Select(x => (BookingDto)x);
+        return Ok(data);
     }
 
     // Untuk menangani request GET dengan route /api/[controller]/guid.
@@ -37,28 +39,27 @@ public class BookingController : ControllerBase // ControllerBase untuk controll
         {
             return NotFound("Data Not Found");
         }
-
-        return Ok(result);
+        
+        return Ok((BookingDto)result);
     }
 
     // Untuk menangani request POST dengan route /api/[controller].
     [HttpPost]
-    public IActionResult Create(Booking booking)
+    public IActionResult Create(CreateBookingDto createBookingDto)
     {
-        var result = _bookingRepository.Create(booking);
+        var result = _bookingRepository.Create(createBookingDto);
         if (result is null)
         {
             return BadRequest("Data Not Created");
         }
-
-        return Ok(result);
+        return Ok((BookingDto)result);
     }
 
     // Untuk menangani request PUT dengan route /api/[controller].
     [HttpPut]
-    public IActionResult Update(Booking booking)
+    public IActionResult Update(BookingDto bookingDto)
     {
-        var result = _bookingRepository.Update(booking);
+        var result = _bookingRepository.Update(bookingDto);
         if (!result)
         {
             return BadRequest("Data Not Updated");

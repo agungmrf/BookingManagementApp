@@ -1,4 +1,5 @@
 using API.Contracts;
+using API.DTOs.Roles;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,9 @@ public class RoleController : ControllerBase // ControllerBase untuk controller 
             return NotFound("Data Not Found");
         }
 
-        return Ok(result);
+        var data = result.Select(x => (RoleDto)x);
+        
+        return Ok(data);
     }
     
     // Untuk menangani request GET dengan route api/[controller]/guid
@@ -38,26 +41,26 @@ public class RoleController : ControllerBase // ControllerBase untuk controller 
             return NotFound("Data Not Found");
         }
 
-        return Ok(result);
+        return Ok((RoleDto)result);
     }
     
     // Untuk menangani request POST dengan route api/[controller]
     [HttpPost]
-    public IActionResult Create(Role role)
+    public IActionResult Create(CreateRoleDto createRoleDto)
     {
-        var result = _roleRepository.Create(role);
+        var result = _roleRepository.Create(createRoleDto);
         if (result is null)
         {
             return BadRequest("Data Not Created");
         }
-        return Ok(result);
+        return Ok((RoleDto) result);
     }
     
     // Untuk menangani request PUT dengan route api/[controller]
     [HttpPut]
-    public IActionResult Update(Role role)
+    public IActionResult Update(RoleDto roleDto)
     {
-        var result  = _roleRepository.Update(role);
+        var result  = _roleRepository.Update(roleDto);
         if (!result)
         {
             return BadRequest("Data Not Updated");
