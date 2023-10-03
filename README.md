@@ -18,7 +18,7 @@ ASP .NET Core [Web API]
 
 **Migration**:
 - `dotnet ef migrations add InitialCreate` atau `dotnet ef migrations add InitialCreate --project path\to\YourProject.csproj` (digunakan untuk menambahkan migrasi)
-- `dotnet ef migrations update` atau `dotnet ef migrations update --project path\to\YourProject.csproj` (digunakan untuk mengupdate migrasi)
+- `dotnet ef database update` atau `dotnet ef database update --project path\to\YourProject.csproj` (digunakan untuk mengupdate database)
 - `dotnet ef get migrations` atau `dotnet ef get migrations --project path\to\YourProject.csproj` (digunakan untuk melihat migrasi yang sudah ada)
 - `dotnet ef remove migrations` atau `dotnet ef remove migrations --project path\to\YourProject.csproj` (digunakan untuk menghapus migrasi)
 

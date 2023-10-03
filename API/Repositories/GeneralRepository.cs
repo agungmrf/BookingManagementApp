@@ -23,7 +23,9 @@ public class GeneralRepository<TEntity> : IGeneralRepository<TEntity> where TEnt
 
     public TEntity? GetByGuid(Guid guid)
     {
-        return _context.Set<TEntity>().Find(guid);
+        var entity = _context.Set<TEntity>().Find(guid);
+        _context.ChangeTracker.Clear(); // Untuk menghapus cache dari entity yang diambil.
+        return entity;
     }
 
     public TEntity? Create(TEntity entity)
