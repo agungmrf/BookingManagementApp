@@ -10,9 +10,9 @@ public class EducationDto
     public float Gpa { get; set; }
     public Guid UniversityGuid { get; set; }
     
-    public static explicit operator EducationDto(Education education)
+    public static explicit operator EducationDto(Education education) // Operator explicit untuk mengkonversi Education menjadi EducationDto.
     {
-        return new EducationDto
+        return new EducationDto // Mengembalikan object EducationDto dengan data dari property Education.
         {
             Guid = education.Guid,
             Major = education.Major,
@@ -22,9 +22,9 @@ public class EducationDto
         };
     }
     
-    public static implicit operator Education(EducationDto educationDto)
+    public static implicit operator Education(EducationDto educationDto) // Operator implicit untuk mengkonversi EducationDto menjadi Education.
     {
-        return new Education
+        return new Education // Mengembalikan object Education dengan data dari property EducationDto.
         {
             Guid = educationDto.Guid,
             Major = educationDto.Major,

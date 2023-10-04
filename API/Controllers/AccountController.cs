@@ -21,78 +21,111 @@ public class AccountController : ControllerBase // Controller is for MVC
     [HttpGet]
     public IActionResult GetAll()
     {
+        // Mengambil semua data dari database.
         var result = _accountRepository.GetAll();
         if (!result.Any())
         {
-            return NotFound("Data Not Found");
+            // Jika tidak ada data, maka akan mengembalikan response 404 Not Found.
+            return NotFound(new ResponseNotFoundHandler("Data Not Found")); 
         }
         
+        // Mengubah IEnumerable<Account> menjadi IEnumerable<AccountDto>
         var data = result.Select(x => (AccountDto)x);
-        return Ok(data);
+        
+        // Jika ada data, maka akan mengembalikan response 200 OK.
+        return Ok(new ResponseOKHandler<IEnumerable<AccountDto>>(data)); 
     }
     
     // Untuk menangani request GET dengan route /api/[controller]/guid.
     [HttpGet("{guid}")]
     public IActionResult GetByGuid(Guid guid)
     {
+        // Mengambil data dari database berdasarkan guid.
         var result = _accountRepository.GetByGuid(guid);
         if (result is null)
         {
-            return NotFound("Data Not Found");
+            // Jika tidak ada data, maka akan mengembalikan response 404 Not Found.
+            return NotFound(new ResponseNotFoundHandler("Data Not Found")); 
         }
-        
-        return Ok((AccountDto)result);
+        // Jika ada data, maka akan mengembalikan response 200 OK.
+        return Ok(new ResponseOKHandler<AccountDto>((AccountDto)result)); 
     }
     
     // Untuk menangani request POST dengan route /api/[controller].
     [HttpPost]
     public IActionResult Create(CreateAccountDto createAccountDto)
     {
-        Account toCreate = createAccountDto;
-        toCreate.Password = HashingHandler.HashPassword(createAccountDto.Password);
-        
-        var result = _accountRepository.Create(toCreate);
-        if (result is null)
+        try
         {
-            return BadRequest("Data Not Created");
+            Account toCreate = createAccountDto;
+            // Untuk menghash password sebelum disimpan ke database
+            toCreate.Password = HashingHandler.HashPassword(createAccountDto.Password); 
+        
+            var result = _accountRepository.Create(toCreate);
+            
+            // Setelah data berhasil dibuat, maka akan mengembalikan response 201 Created.
+            return Ok(new ResponseOKHandler<AccountDto>("Data has been created successfully") { Data = (AccountDto)result });
         }
-        return Ok((AccountDto)result);
+        catch (ExceptionHandler ex) // ExceptionHandler untuk menangani exception ketika terjadi error
+        {
+            // Jika terjadi error, maka akan mengembalikan response 500 Internal Server Error.
+            return StatusCode(StatusCodes.Status500InternalServerError, new ResponseServerErrorHandler("Failed to create data", ex.Message));
+        }
     }
 
     // Untuk menangani request PUT dengan route /api/[controller].
     [HttpPut]
     public IActionResult Update(AccountDto accountDto)
     {
-        var entity = _accountRepository.GetByGuid(accountDto.Guid);
-        if(entity is null)
+        try
         {
-            return NotFound("Id Not Found");
+            // Mengambil data di database berdasarkan guid.
+            var entity = _accountRepository.GetByGuid(accountDto.Guid);
+            if (entity is null)
+            {
+                // Jika tidak ada data, maka akan mengembalikan response 404 Not Found.
+                return NotFound(new ResponseNotFoundHandler("Data Not Found")); 
+            }
+
+            Account toUpdate = accountDto;
+            toUpdate.CreatedDate = entity.CreatedDate; // Menyalin CreatedDate dari entity yang diambil dari database.
+            toUpdate.Password = HashingHandler.HashPassword(accountDto.Password); // Mengambil password dari request body, kemudian dihash sebelum disimpan ke database
+        
+            _accountRepository.Update(toUpdate);
+            
+            // Setelah data berhasil diubah, maka akan mengembalikan response 200 OK.
+            return Ok(new ResponseOKHandler<AccountDto>("Data has been updated successfully") { Data = (AccountDto)toUpdate });
         }
-        
-        Account toUpdate = accountDto;
-        toUpdate.CreatedDate = entity.CreatedDate;
-        toUpdate.Password = HashingHandler.HashPassword(accountDto.Password);
-        
-        var result = _accountRepository.Update(toUpdate);
-        if (!result)
+        catch (ExceptionHandler ex) // ExceptionHandler untuk menangani exception ketika terjadi error
         {
-            return BadRequest("Data Not Updated");
+            // Jika terjadi error, maka akan mengembalikan response 500 Internal Server Error.
+            return StatusCode(StatusCodes.Status500InternalServerError, new ResponseServerErrorHandler("Failed to update data", ex.Message));
         }
-        return Ok("Data has been updated successfully");
     }
     
     // Untuk menangani request DELETE dengan route /api/[controller].
     [HttpDelete]
     public IActionResult Delete(Guid guid)
     {
-        var account = _accountRepository.GetByGuid(guid);
-        var result = _accountRepository.Delete(account);
-        
-        if (!result)
+        try
         {
-            return BadRequest("Data Not Deleted");
+            // Menghapus data di database berdasarkan guid.
+            var entity = _accountRepository.GetByGuid(guid);
+            if (entity is null)
+            {
+                // Jika tidak ada data, maka akan mengembalikan response 404 Not Found.
+                return NotFound(new ResponseNotFoundHandler("Data Not Found"));
+            }
+
+            _accountRepository.Delete(entity);
+
+            // Setelah data berhasil dihapus, maka akan mengembalikan response 200 OK.
+            return Ok(new ResponseOKHandler<string>("Data has been deleted successfully"));
         }
-        
-        return Ok("Data has been deleted successfully");
+        catch (ExceptionHandler ex) // ExceptionHandler untuk menangani exception ketika terjadi error
+        {
+            // ResponseServerErrorHandler untuk response 500 Internal Server Error
+            return StatusCode(StatusCodes.Status500InternalServerError, new ResponseServerErrorHandler("Failed to delete data", ex.Message));
+        }
     }
 }

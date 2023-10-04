@@ -15,9 +15,9 @@ public class EmployeeDto
     public string Email { get; set; }
     public string PhoneNumber { get; set; }
 
-    public static explicit operator EmployeeDto(Employee employee)
+    public static explicit operator EmployeeDto(Employee employee) // Operator explicit untuk mengkonversi Employee menjadi EmployeeDto.
     {
-        return new EmployeeDto
+        return new EmployeeDto // Mengembalikan object EmployeeDto dengan data dari property Employee.
         {
             Guid = employee.Guid,
             Nik = employee.Nik,
@@ -31,9 +31,9 @@ public class EmployeeDto
         };
     }
 
-    public static implicit operator Employee(EmployeeDto employeeDto)
+    public static implicit operator Employee(EmployeeDto employeeDto) // Operator implicit untuk mengkonversi EmployeeDto menjadi Employee.
     {
-        return new Employee
+        return new Employee // Mengembalikan object Employee dengan data dari property EmployeeDto.
         {
             Guid = employeeDto.Guid,
             Nik = employeeDto.Nik,

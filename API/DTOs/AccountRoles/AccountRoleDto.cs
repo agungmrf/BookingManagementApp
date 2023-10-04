@@ -9,9 +9,9 @@ public class AccountRoleDto
     public Guid AccountGuid { get; set; }
     public Guid RoleGuid { get; set; }
 
-    public static explicit operator AccountRoleDto(AccountRole accountRole)
+    public static explicit operator AccountRoleDto(AccountRole accountRole) // Operator explicit untuk mengkonversi AccountRole menjadi AccountRoleDto.
     {
-        return new AccountRoleDto
+        return new AccountRoleDto // Mengembalikan object AccountRoleDto dengan data dari property AccountRole.
         {
             Guid = accountRole.Guid,
             AccountGuid = accountRole.AccountGuid,
@@ -19,9 +19,9 @@ public class AccountRoleDto
         };
     }
     
-    public static implicit operator AccountRole(AccountRoleDto accountRoleDto)
+    public static implicit operator AccountRole(AccountRoleDto accountRoleDto) // Operator implicit untuk mengkonversi AccountRoleDto menjadi AccountRole.
     {
-        return new AccountRole
+        return new AccountRole // Mengembalikan object AccountRole dengan data dari property AccountRoleDto.
         {
             Guid = accountRoleDto.Guid,
             AccountGuid = accountRoleDto.AccountGuid,

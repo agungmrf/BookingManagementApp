@@ -1,5 +1,6 @@
 using API.Contracts;
 using API.Data;
+using API.Utilities.Handler;
 
 namespace API.Repositories;
 
@@ -7,7 +8,7 @@ namespace API.Repositories;
 public class GeneralRepository<TEntity> : IGeneralRepository<TEntity> where TEntity : class 
 {
     // Membuat constructor untuk menginisialisasi context.
-    private readonly BookingManagementDbContext _context;
+    public readonly BookingManagementDbContext _context;
 
     // Constructor akan dijalankan ketika class GeneralRepository dipanggil.
     protected GeneralRepository(BookingManagementDbContext context)
@@ -36,9 +37,9 @@ public class GeneralRepository<TEntity> : IGeneralRepository<TEntity> where TEnt
             _context.SaveChanges(); // Untuk menyimpan perubahan data ke database.
             return entity;
         }
-        catch
+        catch (Exception ex)
         {
-            return null;
+            throw new ExceptionHandler(ex.InnerException?.Message ?? ex.Message);
         }
     }
 
@@ -50,9 +51,9 @@ public class GeneralRepository<TEntity> : IGeneralRepository<TEntity> where TEnt
             _context.SaveChanges(); // Untuk menyimpan perubahan data ke database.
             return true;
         }
-        catch
+        catch (Exception ex)
         {
-            return false;
+            throw new ExceptionHandler(ex.InnerException?.Message ?? ex.Message);
         }
     }
 
@@ -64,9 +65,9 @@ public class GeneralRepository<TEntity> : IGeneralRepository<TEntity> where TEnt
             _context.SaveChanges();
             return true;
         }
-        catch
+        catch (Exception ex)
         {
-            return false;
+            throw new ExceptionHandler(ex.InnerException?.Message ?? ex.Message);
         }
     }
 }

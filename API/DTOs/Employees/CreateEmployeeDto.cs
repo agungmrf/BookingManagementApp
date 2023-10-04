@@ -6,7 +6,6 @@ namespace API.DTOs.Employees;
 
 public class CreateEmployeeDto
 {
-    public string Nik { get; set; }
     public string FirstName { get; set; }
     public string? LastName { get; set; }
     public DateTime BirthDate { get; set; }
@@ -15,11 +14,11 @@ public class CreateEmployeeDto
     public string Email { get; set; }
     public string PhoneNumber { get; set; }
 
-    public static implicit operator Employee(CreateEmployeeDto createEmployeeDto)
+    public static implicit operator Employee(CreateEmployeeDto createEmployeeDto) // Operator implicit untuk mengkonversi CreateEmployeeDto menjadi Employee.
     {
-        return new Employee
+        return new Employee // Mengembalikan object Employee dengan data dari property CreateEmployeeDto.
         {
-            Nik = createEmployeeDto.Nik,
+            Guid = new Guid(),
             FirstName = createEmployeeDto.FirstName,
             LastName = createEmployeeDto.LastName,
             BirthDate = createEmployeeDto.BirthDate,

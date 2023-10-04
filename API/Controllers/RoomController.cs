@@ -1,6 +1,7 @@
 using API.Contracts;
 using API.DTOs.Rooms;
 using API.Models;
+using API.Utilities.Handler;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -20,74 +21,107 @@ public class RoomController : ControllerBase // ControllerBase untuk controller 
     [HttpGet]
     public IActionResult GetAll()
     {
+        // Mengambil semua data dari database.
         var result = _roomRepository.GetAll();
         if (!result.Any())
         {
-            return NotFound("Data Not Found");
+            // Jika tidak ada data, maka akan mengembalikan response 404 Not Found.
+            return NotFound(new ResponseNotFoundHandler("Data Not Found"));
         }
-
+        // Mengubah IEnumerable<Room> menjadi IEnumerable<RoomDto>
         var data = result.Select(x => (RoomDto)x);
-        return Ok(data);
+        
+        // Jika ada data, maka akan mengembalikan response 200 OK.
+        return Ok(new ResponseOKHandler<IEnumerable<RoomDto>>(data));
     }
     
     // Untuk menangani request GET dengan route api/[controller]/guid
     [HttpGet("{guid}")]
     public IActionResult GetByGuid(Guid guid)
     {
+        // Mengambil data dari database berdasarkan guid.
         var result = _roomRepository.GetByGuid(guid);
         if (result is null)
         {
-            return NotFound("Data Not Found");
+            // Jika tidak ada data, maka akan mengembalikan response 404 Not Found.
+            return NotFound(new ResponseNotFoundHandler("Data Not Found"));
         }
 
-        return Ok((RoomDto)result);
+        // Jika ada data, maka akan mengembalikan response 200 OK.
+        return Ok(new ResponseOKHandler<RoomDto>((RoomDto)result));
     }
     
     // Untuk menangani request POST dengan route api/[controller]
     [HttpPost]
     public IActionResult Create(CreateRoomDto createRoomDto)
     {
-        var result = _roomRepository.Create(createRoomDto);
-        if (result is null)
+        try
         {
-            return BadRequest("Data Not Created");
+            // Membuat data baru di database.
+            var result = _roomRepository.Create(createRoomDto);
+            
+            // Setelah data berhasil dibuat, maka akan mengembalikan response 201 Created.
+            return Ok(new ResponseOKHandler<RoomDto>("Data has been created successfully") { Data = (RoomDto)result });
         }
-        return Ok((RoomDto) result);
+        catch (ExceptionHandler ex)
+        {
+            // Jika terjadi error, maka akan mengembalikan response 500 Internal Server Error.
+            return StatusCode(StatusCodes.Status500InternalServerError, new ResponseServerErrorHandler("Failed to create data", ex.Message));
+        }
     }
     
     // Untuk menangani request PUT dengan route api/[controller]
     [HttpPut]
     public IActionResult Update(RoomDto roomDto)
     {
-        var entity = _roomRepository.GetByGuid(roomDto.Guid);
-        if (entity is null)
+        try
         {
-            return NotFound("Id Not Found");
-        }
+            // Mengambil data di database berdasarkan guid.
+            var entity = _roomRepository.GetByGuid(roomDto.Guid);
+            if (entity is null)
+            {
+                // Jika tidak ada data, maka akan mengembalikan response 404 Not Found.
+                return NotFound(new ResponseNotFoundHandler("Data Not Found"));
+            }
         
-        Room toUpdate = roomDto;
-        toUpdate.CreatedDate = entity.CreatedDate;
+            Room toUpdate = roomDto;
+            toUpdate.CreatedDate = entity.CreatedDate; // Menyalin CreatedDate dari entity yang diambil dari database.
         
-        var result = _roomRepository.Update(toUpdate);
-        if (!result)
-        {
-            return BadRequest("Data Not Updated");
-        }
+            _roomRepository.Update(toUpdate);
 
-        return Ok("Data has been updated successfully");
+            // Setelah data berhasil diubah, maka akan mengembalikan response 200 OK.
+            return Ok(new ResponseOKHandler<RoomDto>("Data has been updated successfully") { Data = (RoomDto)toUpdate });
+        }
+        catch (ExceptionHandler ex)
+        {
+            // Jika terjadi error, maka akan mengembalikan response 500 Internal Server Error.
+            return StatusCode(StatusCodes.Status500InternalServerError, new ResponseServerErrorHandler("Failed to update data", ex.Message));
+        }
     }
 
     // Untuk menangani request DELETE dengan route api/[controller]
     [HttpDelete]
     public IActionResult Delete(Guid guid)
     {
-        var room = _roomRepository.GetByGuid(guid);
-        var result = _roomRepository.Delete(room);
-        if (!result)
+        try
         {
-            return BadRequest("Data Not Deleted");
+            // Mengambil data di database berdasarkan guid.
+            var entity = _roomRepository.GetByGuid(guid);
+            if (entity is null)
+            {
+                return NotFound(new ResponseNotFoundHandler("Data Not Found"));
+            }
+
+            // Menghapus data di database berdasarkan guid.
+            _roomRepository.Delete(entity);
+
+            // Setelah data berhasil dihapus, maka akan mengembalikan response 200 OK.
+            return Ok(new ResponseOKHandler<string>("Data has been deleted successfully"));
         }
-        
-        return Ok("Data has been deleted successfully");
+        catch (ExceptionHandler ex)
+        {
+            // Jika terjadi error, maka akan mengembalikan response 500 Internal Server Error.
+            return StatusCode(StatusCodes.Status500InternalServerError, new ResponseServerErrorHandler("Failed to delete data", ex.Message));
+        }
     }
 }

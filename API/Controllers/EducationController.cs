@@ -1,6 +1,7 @@
 using API.Contracts;
 using API.DTOs.Educations;
 using API.Models;
+using API.Utilities.Handler;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -20,73 +21,106 @@ public class EducationController : ControllerBase // ControllerBase untuk contro
     [HttpGet]
     public IActionResult GetAll()
     {
+        // Mengambil semua data dari database.
         var result = _educationRepository.GetAll();
         if (!result.Any())
         {
-            return NotFound("Data Not Found");
+            // Jika tidak ada data, maka akan mengembalikan response 404 Not Found.
+            return NotFound(new ResponseNotFoundHandler("Data Not Found"));
         }
-        
+        // Mengubah IEnumerable<Education> menjadi IEnumerable<EducationDto>.
         var data = result.Select(x => (EducationDto)x);
         
-        return Ok(data);
+        // Jika ada data, maka akan mengembalikan response 200 OK.
+        return Ok(new ResponseOKHandler<IEnumerable<EducationDto>>(data));
     }
     
     // Untuk menangani request GET dengan route /api/[controller]/guid.
     [HttpGet("{guid}")]
     public IActionResult GetByGuid(Guid guid)
     {
+        // Mengambil data dari database berdasarkan guid.
         var result = _educationRepository.GetByGuid(guid);
         if (result is null)
         {
-            return NotFound("Data Not Found");
+            // Jika tidak ada data, maka akan mengembalikan response 404 Not Found.
+            return NotFound(new ResponseNotFoundHandler("Data Not Found"));
         }
-
-        return Ok((EducationDto)result);
+        // Jika ada data, maka akan mengembalikan response 200 OK.
+        return Ok(new ResponseOKHandler<EducationDto>((EducationDto)result));
     }
     
     // Untuk menangani request POST dengan route /api/[controller].
     [HttpPost]
     public IActionResult Create(CreateEducationDto createEducationDto)
     {
-        var result = _educationRepository.Create(createEducationDto);
-        if (result is null)
+        try
         {
-            return BadRequest("Data Not Created"); 
+            // Membuat data baru di database.
+            var result = _educationRepository.Create(createEducationDto);
+            
+            // Setelah data berhasil dibuat, maka akan mengembalikan response 201 Created.
+            return Ok(new ResponseOKHandler<EducationDto>("Data has been created successfully") { Data = (EducationDto)result });
         }
-        return Ok((EducationDto)result);
+        catch (ExceptionHandler ex)
+        {
+            // Jika terjadi error, maka akan mengembalikan response 500 Internal Server Error.
+            return StatusCode(StatusCodes.Status500InternalServerError, new ResponseServerErrorHandler("Failed to create data", ex.Message));
+        }
     }
     
     // Untuk menangani request PUT dengan route /api/[controller].
     [HttpPut]
     public IActionResult Update(EducationDto educationDto)
     {
-        var entity = _educationRepository.GetByGuid(educationDto.Guid);
-        if (entity is null)
+        try
         {
-            return NotFound("Id Not Found");
+            // Mengambil data dari database berdasarkan guid.
+            var entity = _educationRepository.GetByGuid(educationDto.Guid);
+            if (entity is null)
+            {
+                // Jika tidak ada data, maka akan mengembalikan response 404 Not Found.
+                return NotFound(new ResponseNotFoundHandler("Data Not Found"));
+            }
+        
+            Education toUpdate = educationDto;
+            toUpdate.CreatedDate = entity.CreatedDate; // Menyalin CreatedDate dari entity yang diambil dari database.
+        
+            _educationRepository.Update(toUpdate);
+            
+            // Setelah data berhasil diubah, maka akan mengembalikan response 200 OK.
+            return Ok(new ResponseOKHandler<EducationDto>("Data has been updated successfully") { Data = (EducationDto)toUpdate });
         }
-        
-        Education toUpdate = educationDto;
-        toUpdate.CreatedDate = entity.CreatedDate;
-        
-        var result = _educationRepository.Update(toUpdate);
-        if (!result)
+        catch (ExceptionHandler ex)
         {
-            return BadRequest("Data Not Updated");
+            // Jika terjadi error, maka akan mengembalikan response 500 Internal Server Error.
+            return StatusCode(StatusCodes.Status500InternalServerError, new ResponseServerErrorHandler("Failed to update data", ex.Message));
         }
-        return Ok("Data has been updated successfully");
     }
 
     // Untuk menangani request DELETE dengan route /api/[controller]/guid.
     [HttpDelete]
     public IActionResult Delete(Guid guid)
     {
-        var education = _educationRepository.GetByGuid(guid);
-        var result = _educationRepository.Delete(education);
-        if (!result)
+        try
         {
-            return BadRequest("Data Not Deleted");
+            // Menghapus data dari database berdasarkan guid.
+            var entity = _educationRepository.GetByGuid(guid);
+            if (entity is null)
+            {
+                // Jika tidak ada data, maka akan mengembalikan response 404 Not Found.
+                return NotFound(new ResponseNotFoundHandler("Data Not Found"));
+            }
+
+            _educationRepository.Delete(entity);
+
+            // Setelah data berhasil dihapus, maka akan mengembalikan response 200 OK.
+            return Ok(new ResponseOKHandler<string>("Data has been deleted successfully"));
         }
-        return Ok("Data has been deleted successfully");
+        catch (ExceptionHandler ex)
+        {
+            // Jika terjadi error, maka akan mengembalikan response 500 Internal Server Error.
+            return StatusCode(StatusCodes.Status500InternalServerError, new ResponseServerErrorHandler("Failed to delete data", ex.Message));
+        }
     }
 }

@@ -8,9 +8,9 @@ public class UniversityDto
     public string Code { get; set; }
     public string Name { get; set; }
 
-    public static explicit operator UniversityDto(University university)
+    public static explicit operator UniversityDto(University university) // Operator explicit untuk mengkonversi University menjadi UniversityDto.
     {
-        return new UniversityDto
+        return new UniversityDto // Mengembalikan object UniversityDto dengan data dari property University.
         {
             Guid = university.Guid,
             Code = university.Code,
