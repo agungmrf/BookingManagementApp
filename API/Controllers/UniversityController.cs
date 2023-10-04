@@ -89,7 +89,7 @@ public class UniversityController : ControllerBase
             _universityRepository.Update(toUpdate);
             
             // Setelah data berhasil diupdate, maka akan mengembalikan response 200 OK.
-            return Ok(new ResponseOKHandler<string>("Data has been updated successfully"));
+            return Ok(new ResponseOKHandler<UniversityDto>("Data has been updated successfully") { Data = (UniversityDto)toUpdate });
         }
         catch (ExceptionHandler ex)
         {
