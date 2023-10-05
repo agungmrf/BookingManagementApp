@@ -10,4 +10,9 @@ public class UniversityRepository :  GeneralRepository<University>, IUniversityR
     public UniversityRepository(BookingManagementDbContext context) : base(context)
     {
     }
+    
+    public University? GetUniversityByCode(string code)
+    {
+        return _context.Set<University>().SingleOrDefault(unv => unv.Code == code);
+    }
 }

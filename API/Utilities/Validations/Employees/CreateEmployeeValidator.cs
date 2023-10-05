@@ -13,7 +13,7 @@ public class CreateEmployeeValidator : AbstractValidator<CreateEmployeeDto>
 
         RuleFor(e => e.BirthDate)
             .NotEmpty() // Validasi agar BirthDate tidak boleh kosong
-            .GreaterThanOrEqualTo(DateTime.Now.AddYears(-18)); // Validasi agar BirthDate tidak boleh kurang dari 18 tahun
+            .LessThanOrEqualTo(DateTime.Now.AddYears(-18)); // Validasi agar BirthDate tidak boleh kurang dari 18 tahun
 
         RuleFor(e => e.Gender)
             .NotNull() // Validasi agar Gender tidak null, jika menggunakan NotEmpty 0 dianggap kosong

@@ -20,4 +20,10 @@ public class EmployeeRepository : GeneralRepository<Employee>, IEmployeeReposito
         
         return lastNik;
     }
+    
+    public Employee? GetByEmail(string email)
+    {
+        // Mengambil data dari database dengan model Employee, kemudian diambil data yang emailnya mengandung email yang diberikan
+        return _context.Set<Employee>().SingleOrDefault(e => e.Email.Contains(email));
+    }
 }

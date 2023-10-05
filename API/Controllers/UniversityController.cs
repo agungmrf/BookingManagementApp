@@ -1,6 +1,7 @@
 using API.Contracts;
 using API.DTOs.Universities;
 using API.Models;
+using API.Services;
 using API.Utilities.Handler;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,13 @@ public class UniversityController : ControllerBase
     {
         _universityRepository = universityRepository;
     }
+
+    /*private readonly UniversityService _universityService;
+
+    public UniversityController(UniversityService universityService)
+    {
+        _universityService = universityService;
+    }*/
 
     // Untuk menangani request GET dengan route /api/[controller].
     [HttpGet]

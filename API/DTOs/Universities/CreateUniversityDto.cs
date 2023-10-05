@@ -11,6 +11,7 @@ public class CreateUniversityDto
     {
         return new University // Mengembalikan object University dengan data dari property CreateUniversityDto.
         {
+            Guid = new Guid(),
             Code = createUniversityDto.Code,
             Name = createUniversityDto.Name,
             CreatedDate = DateTime.Now,

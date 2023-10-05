@@ -6,5 +6,5 @@ namespace API.Contracts;
 // Memanggil <University> karena IGeneralRepository membutuhkan TEntity sebagai sebuah model.
 public interface IUniversityRepository : IGeneralRepository<University>
 {
-    
+    University? GetUniversityByCode(string code); // Method untuk mendapatkan data University berdasarkan code
 }

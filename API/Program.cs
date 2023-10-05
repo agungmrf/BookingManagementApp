@@ -2,7 +2,9 @@ using System.Reflection;
 using API.Contracts;
 using API.Data;
 using API.Repositories;
+using API.Services;
 using API.Utilities.Handler;
+using API.Utilities.Handlers;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +16,13 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<BookingManagementDbContext>(option => option.UseSqlServer(connectionString));
 
+// Add Email Service to the container.
+builder.Services.AddTransient<IEmailHandler, EmailHandler>(_ => new EmailHandler(
+    builder.Configuration["SmtpService:Server"],
+    int.Parse(builder.Configuration["SmtpService:Port"]),
+    builder.Configuration["SmtpService:FromEmailAddress"]
+));
+
 // Add repositories to the container.
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountRoleRepository, AccountRoleRepository>();
@@ -23,6 +32,16 @@ builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<IUniversityRepository, UniversityRepository>();
+
+// Add services to the container.
+/*builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<AccountRoleService>();
+builder.Services.AddScoped<BookingService>();
+builder.Services.AddScoped<EducationService>();
+builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<RoleService>();
+builder.Services.AddScoped<RoomService>();*/
+builder.Services.AddScoped<UniversityService>();
 
 // Add FluentValidation Services
 builder.Services.AddFluentValidationAutoValidation()
