@@ -4,5 +4,7 @@ namespace API.Contracts;
 
 public interface IGenerateTokenHandler
 {
-    string Generate(IEnumerable<Claim> claims);
+    // Untuk mengenerate token
+    // Claim digunakan untuk menyimpan informasi user yang login
+    string Generate(IEnumerable<Claim> claims); 
 }

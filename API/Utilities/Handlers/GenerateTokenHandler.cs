@@ -7,11 +7,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace API.Utilities.Handlers;
 
-public class GenerateGenerateTokenHandler : IGenerateTokenHandler
+public class GenerateTokenHandler : IGenerateTokenHandler
 {
     private readonly IConfiguration _configuration;
 
-    public GenerateGenerateTokenHandler(IConfiguration configuration)
+    public GenerateTokenHandler(IConfiguration configuration)
     {
         _configuration = configuration;
     }

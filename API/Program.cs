@@ -27,7 +27,7 @@ builder.Services.AddTransient<IEmailHandler, EmailHandler>(_ => new EmailHandler
 ));
 
 //Register TokenHandler
-builder.Services.AddScoped<IGenerateTokenHandler, GenerateGenerateTokenHandler>();
+builder.Services.AddScoped<IGenerateTokenHandler, GenerateTokenHandler>();
 
 // JWT Authentication Configuration
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -46,14 +46,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Configure CORS
+// Configure CORS untuk memperbolehkan semua origin, header, dan method.
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.AllowAnyOrigin();
-        policy.AllowAnyHeader();
-        policy.WithMethods("GET", "POST", "PUT", "DELETE");
+        policy.AllowAnyOrigin(); // digunakan untuk memberikan akses ke semua origin
+        policy.AllowAnyHeader(); // digunakan untuk memberikan akses ke semua header
+        policy.WithMethods("GET", "POST", "PUT", "DELETE"); // digunakan untuk memberikan akses ke semua method
     });
 });
 
