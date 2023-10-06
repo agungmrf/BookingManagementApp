@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace API.Utilities.Handler;
+namespace API.Utilities.Handlers;
 
 public class ResponseValidatorHandler
 {

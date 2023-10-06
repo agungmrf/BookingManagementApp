@@ -1,17 +1,22 @@
+using System.Security.Claims;
 using API.Contracts;
 using API.Data;
+using API.DTOs.AccountRoles;
 using API.DTOs.Accounts;
 using API.DTOs.Educations;
 using API.DTOs.Employees;
 using API.Models;
 using API.Utilities.Handler;
+using API.Utilities.Handlers;
 using API.Utilities.Validations.Accounts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class AccountController : ControllerBase // Controller is for MVC
 {
     private readonly IAccountRepository _accountRepository; // readonly is for dependency injection
@@ -19,11 +24,14 @@ public class AccountController : ControllerBase // Controller is for MVC
     private readonly BookingManagementDbContext _dbContext;
     private readonly IUniversityRepository _universityRepository;
     private readonly IEducationRepository _educationRepository;
+    private readonly IAccountRoleRepository _accountRoleRepository;
+    private readonly IRoleRepository _roleRepository;
     private readonly IEmailHandler _emailHandler;
+    private readonly IGenerateTokenHandler _generateTokenHandler;
 
     public AccountController(IAccountRepository accountRepository, IEmployeeRepository employeeRepository,
         BookingManagementDbContext dbContext, IUniversityRepository universityRepository,
-        IEducationRepository educationRepository, IEmailHandler emailHandler)
+        IEducationRepository educationRepository, IEmailHandler emailHandler, IGenerateTokenHandler generateTokenHandler, IAccountRoleRepository accountRoleRepository, IRoleRepository roleRepository)
     {
         _accountRepository = accountRepository;
         _employeeRepository = employeeRepository;
@@ -31,6 +39,9 @@ public class AccountController : ControllerBase // Controller is for MVC
         _universityRepository = universityRepository;
         _educationRepository = educationRepository;
         _emailHandler = emailHandler;
+        _generateTokenHandler = generateTokenHandler;
+        _accountRoleRepository = accountRoleRepository;
+        _roleRepository = roleRepository;
     }
 
     // Untuk menangani request GET dengan route /api/[controller].
@@ -154,6 +165,7 @@ public class AccountController : ControllerBase // Controller is for MVC
     }
 
     [HttpPost("forgot-password")]
+    [AllowAnonymous]
     public IActionResult ForgotPassword(ForgotPasswordDto forgotPasswordDto)
     {
         try
@@ -197,6 +209,7 @@ public class AccountController : ControllerBase // Controller is for MVC
     }
 
     [HttpPut("change-password")]
+    [AllowAnonymous]
     public IActionResult ChangePassword(ChangePasswordDto changePasswordDto)
     {
         try
@@ -267,6 +280,7 @@ public class AccountController : ControllerBase // Controller is for MVC
     }
 
     [HttpPost("register")]
+    [AllowAnonymous]
     public IActionResult Register(RegisterDto registerDto)
     {
         using var transaction = _dbContext.Database.BeginTransaction();
@@ -325,6 +339,12 @@ public class AccountController : ControllerBase // Controller is for MVC
                 Otp = 111111,
                 Password = HashingHandler.HashPassword(registerDto.Password)
             });
+            
+            var accountRole = _accountRoleRepository.Create(new AccountRole {
+                AccountGuid = employeeToCreate.Guid,
+                RoleGuid = _roleRepository.getDefaultRoleGuid() ?? throw new Exception("Default role not found")
+            });
+            
 
             // Commit transaksi jika semuanya berhasil
             transaction.Commit();
@@ -342,13 +362,14 @@ public class AccountController : ControllerBase // Controller is for MVC
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public IActionResult Login(LoginDto loginDto)
     {
         try
         {
             // Cari data employee dan account
             var getEmployee = _employeeRepository.GetByEmail(loginDto.Email);
-            
+
             if (getEmployee is null)
             {
                 // Jika tidak ada data, maka akan mengembalikan response 404 Not Found
@@ -356,13 +377,33 @@ public class AccountController : ControllerBase // Controller is for MVC
             }
             // Cari data akun berdasarkan guid employee
             var getAccount = _accountRepository.GetByGuid(getEmployee.Guid);
-            
+
             // Periksa apakah password yang dimasukkan sesuai dengan password yang ada di database
             if (!HashingHandler.VerifyPassword(loginDto.Password, getAccount.Password))
             {
                 // Jika tidak sesuai, maka akan mengembalikan response 400 Bad Request
                 return BadRequest(new ResponseValidatorHandler("Password is invalid"));
             }
+
+            // Generate token
+            var claims = new List<Claim>();
+            claims.Add(new Claim("Email", getEmployee.Email));
+            claims.Add(new Claim("FullName", string.Concat(getEmployee.FirstName, " ", getEmployee.LastName)));
+
+            var getRoleNames = from ar in _accountRoleRepository.GetAll()
+                join r in _roleRepository.GetAll() on ar.RoleGuid equals r.Guid
+                where ar.AccountGuid == getEmployee.Guid
+                select r.Name;
+
+            foreach (var roleName in getRoleNames)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, roleName));
+            }
+            
+            var generateToken = _generateTokenHandler.Generate(claims);
+
+            // Jika berhasil, maka akan mengembalikan response 200 OK bersama dengan token
+            return Ok(new ResponseOKHandler<object>("Login success", new { Token = generateToken }));
         }
         catch (ExceptionHandler ex)
         {
@@ -370,7 +411,5 @@ public class AccountController : ControllerBase // Controller is for MVC
             return StatusCode(StatusCodes.Status500InternalServerError,
                 new ResponseServerErrorHandler("Failed to process the request", ex.Message));
         }
-        // Jika berhasil, maka akan mengembalikan response 200 OK
-        return Ok(new ResponseOKHandler<string>("Login success"));
     }
 }

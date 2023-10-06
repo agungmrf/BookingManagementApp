@@ -23,4 +23,12 @@ public class ResponseOKHandler<TEntity>
         Status = HttpStatusCode.OK.ToString();
         Message = message;
     }
+    
+    public ResponseOKHandler(string message, TEntity data)
+    {
+        Code = StatusCodes.Status200OK;
+        Status = HttpStatusCode.OK.ToString();
+        Message = message;
+        Data = data;
+    }
 }

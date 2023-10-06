@@ -6,5 +6,5 @@ namespace API.Contracts;
 // Memanggil <AccountRole> karena IGeneralRepository membutuhkan TEntity sebagai sebuah model.
 public interface IAccountRoleRepository : IGeneralRepository<AccountRole> 
 {
-    
+    IEnumerable<Guid> GetRoleGuidsByAccountGuid(Guid accountGuid);
 }

@@ -10,4 +10,9 @@ public class AccountRoleRepository : GeneralRepository<AccountRole>, IAccountRol
     public AccountRoleRepository(BookingManagementDbContext context) : base(context)
     {
     }
+
+    public IEnumerable<Guid> GetRoleGuidsByAccountGuid(Guid accountGuid)
+    {
+        return _context.Set<AccountRole>().Where(ar => ar.AccountGuid == accountGuid).Select(ar => ar.RoleGuid);
+    }
 }
