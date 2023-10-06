@@ -259,7 +259,7 @@ public class AccountController : ControllerBase // Controller is for MVC
 
             return Ok(new ResponseOKHandler<string>("Password has been changed successfully"));
         }
-        catch (Exception ex)
+        catch (ExceptionHandler ex)
         {
             return StatusCode(StatusCodes.Status500InternalServerError,
                 new ResponseServerErrorHandler("Failed to process the request", ex.Message));
@@ -329,7 +329,7 @@ public class AccountController : ControllerBase // Controller is for MVC
             // Commit transaksi jika semuanya berhasil
             transaction.Commit();
         }
-        catch (Exception ex)
+        catch (ExceptionHandler ex)
         {
             // Rollback transaksi jika terjadi kesalahan
             transaction.Rollback();
@@ -364,11 +364,11 @@ public class AccountController : ControllerBase // Controller is for MVC
                 return BadRequest(new ResponseValidatorHandler("Password is invalid"));
             }
         }
-        catch (Exception e)
+        catch (ExceptionHandler ex)
         {
             // Jika terjadi error, maka akan mengembalikan response 500 Internal Server Error
             return StatusCode(StatusCodes.Status500InternalServerError,
-                new ResponseServerErrorHandler("Failed to process the request", e.Message));
+                new ResponseServerErrorHandler("Failed to process the request", ex.Message));
         }
         // Jika berhasil, maka akan mengembalikan response 200 OK
         return Ok(new ResponseOKHandler<string>("Login success"));
