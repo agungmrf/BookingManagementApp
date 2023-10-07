@@ -11,10 +11,14 @@ namespace API.Controllers;
 public class BookingController : ControllerBase // ControllerBase untuk controller tanpa view
 {
     private readonly IBookingRepository _bookingRepository;
+    private readonly IEmployeeRepository _employeeRepository;
+    private readonly IRoomRepository _roomRepository;
 
-    public BookingController(IBookingRepository bookingRepository)
+    public BookingController(IBookingRepository bookingRepository, IEmployeeRepository employeeRepository, IRoomRepository roomRepository)
     {
         _bookingRepository = bookingRepository;
+        _employeeRepository = employeeRepository;
+        _roomRepository = roomRepository;
     }
 
     // Untuk menangani request GET dengan route /api/[controller].
@@ -122,5 +126,70 @@ public class BookingController : ControllerBase // ControllerBase untuk controll
             // Jika terjadi error, maka akan mengembalikan response 500 Internal Server Error.
             return StatusCode(StatusCodes.Status500InternalServerError, new ResponseServerErrorHandler("Failed to delete data", ex.Message));
         }
+    }
+
+    [HttpGet("booking-details")]
+    public IActionResult GetDetails()
+    {
+        // Mengambil semua data booking, employee, dan room dari repository
+        var bookings = _bookingRepository.GetAll();
+        var employees = _employeeRepository.GetAll();
+        var rooms = _roomRepository.GetAll();
+
+        // Menggunakan LINQ untuk menggabungkan data dari ketiga repository ke dalam bookingDetails
+        var bookingDetails = from booking in bookings
+            join employee in employees on booking.EmployeeGuid equals employee.Guid
+            join room in rooms on booking.RoomGuid equals room.Guid
+            select new BookingDetailDto
+            {
+                Guid = booking.Guid,
+                BookedNIK = employee.Nik,
+                BookedBy = string.Concat(employee.FirstName, " ", employee.LastName),
+                RoomName = room.Name,
+                StartDate = booking.StartDate,
+                EndDate = booking.EndDate,
+                Status = booking.Status.ToString(), // Mengambil status booking dan mengonversinya menjadi string
+                Remarks = booking.Remarks
+            };
+            
+            if (!bookingDetails.Any())
+            {
+                // Jika tidak ada data, maka akan mengembalikan response 404 Not Found
+                return NotFound(new ResponseNotFoundHandler("Data Not Found"));
+            }
+            // Jika ada data bookingDetails, maka akan mengembalikan response 200 OK
+            return Ok(new ResponseOKHandler<IEnumerable<BookingDetailDto>>(bookingDetails));
+    }
+
+    [HttpGet("booking-details/{guid}")]
+    public IActionResult GetDetailByGuid(Guid guid)
+    {
+        // Mengambil data booking berdasarkan Guid dari repository
+        var booking = _bookingRepository.GetByGuid(guid);
+        if (booking == null)
+        {
+            // Jika booking dengan Guid yang diinputkan tidak ditemukan, mengembalikan response 404 Not Found
+            return NotFound(new ResponseNotFoundHandler("Id Booking Detail Not Found"));
+        }
+        
+        // Mengambil data employee dan room berdasarkan Guid dari repository
+        var employee = _employeeRepository.GetByGuid(booking.EmployeeGuid);
+        var room = _roomRepository.GetByGuid(booking.RoomGuid);
+        
+        // Membuat objek BookingDetailDto berdasarkan data yang diambil
+        var bookingDetail = new BookingDetailDto
+        {
+            Guid = booking.Guid,
+            BookedNIK = employee.Nik,
+            BookedBy = string.Concat(employee.FirstName, " ", employee.LastName),
+            RoomName = room.Name,
+            StartDate = booking.StartDate,
+            EndDate = booking.EndDate,
+            Status = booking.Status.ToString(),
+            Remarks = booking.Remarks
+        };
+        
+        // Mengembalikan response 200 Ok dengan data bookingDetail
+        return Ok(new ResponseOKHandler<BookingDetailDto>(bookingDetail));
     }
 }
