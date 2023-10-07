@@ -390,12 +390,14 @@ public class AccountController : ControllerBase // Controller is for MVC
             claims.Add(new Claim("Email", getEmployee.Email));
             claims.Add(new Claim("FullName", string.Concat(getEmployee.FirstName, " ", getEmployee.LastName)));
 
+            // Untuk mendapatkan role dari akun yang sedang login
             var getRoleNames = from ar in _accountRoleRepository.GetAll()
                 join r in _roleRepository.GetAll() on ar.RoleGuid equals r.Guid
                 where ar.AccountGuid == getEmployee.Guid
                 select r.Name;
 
-            foreach (var roleName in getRoleNames)
+            // Jika akun memiliki lebih dari satu role, maka akan ditambahkan ke claims
+            foreach (var roleName in getRoleNames) 
             {
                 claims.Add(new Claim(ClaimTypes.Role, roleName));
             }

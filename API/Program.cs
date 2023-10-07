@@ -141,9 +141,9 @@ app.UseHttpsRedirection();
 
 app.UseCors();
 
-app.UseAuthentication();
+app.UseAuthentication(); // Sebagai middleware untuk mengaktifkan autentikasi JWT
 
-app.UseAuthorization();
+app.UseAuthorization(); // Sebagai middleware untuk mengaktifkan authorization JWT
 
 app.MapControllers();
 
