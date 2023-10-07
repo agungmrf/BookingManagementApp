@@ -148,7 +148,7 @@ public class RoomController : ControllerBase // ControllerBase untuk controller 
         var rooms = _roomRepository.GetAll();
 
         // Mendapatkan tanggal hari ini dalam format "dd-MM-yyyy"
-        var today = DateTime.Today.ToString("dd-MM-yyyy"); 
+        var today = DateTime.Today.Date;
         
         // Mencari semua data booking yang dimulai pada tanggal hari ini
         var reservationRoomToday = from booking in bookings
@@ -174,5 +174,35 @@ public class RoomController : ControllerBase // ControllerBase untuk controller 
 
         // Jika ada data booking yang dimulai hari ini, maka akan mengembalikan response 200 OK
         return Ok(new ResponseOKHandler<IEnumerable<RoomReservationDto>>(reservationRoomToday));
+    }
+
+    [HttpGet("available-rooms")]
+    public IActionResult GetAvailableRoomsToday()
+    {
+        // Mendapatkan daftar semua booking dan room dari repository
+        var bookings = _bookingRepository.GetAll();
+        var rooms = _roomRepository.GetAll();
+            
+        // Mendapatkan tanggal hari ini dalam format "dd-MM-yyyy"
+        var today = DateTime.Today.Date;
+            
+        // Menggunakan LINQ untuk mencari kamar yang tersedia hari ini
+        var availableRoomToday = from booking in bookings
+            join room in rooms on booking.RoomGuid equals room.Guid
+            where booking.StartDate.Date == DateTime.Today
+            select room;
+        
+        // Menggunakan operator Except untuk mendapatkan kamar yang tidak terbooking hari ini
+        var availableRooms = rooms.Except(availableRoomToday);
+        if (!availableRooms.Any())
+        {
+            return NotFound(new ResponseNotFoundHandler("No available rooms today"));
+        }
+        
+        // Mengubah IEnumerable<Room> menjadi IEnumerable<RoomDto>
+        var data = availableRooms.Select(x => (RoomDto)x);
+        
+        // Untuk mengembalikan response 200 OK
+        return Ok(new ResponseOKHandler<IEnumerable<RoomDto>>(data));
     }
 }
