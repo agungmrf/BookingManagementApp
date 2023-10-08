@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using API.Contracts;
 using API.Data;
-using API.DTOs.AccountRoles;
 using API.DTOs.Accounts;
 using API.DTOs.Educations;
 using API.DTOs.Employees;
@@ -10,6 +9,7 @@ using API.Utilities.Handler;
 using API.Utilities.Handlers;
 using API.Utilities.Validations.Accounts;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -45,6 +45,7 @@ public class AccountController : ControllerBase // Controller is for MVC
     }
 
     // Untuk menangani request GET dengan route /api/[controller].
+    [Authorize(Roles = "admin")]
     [HttpGet]
     public IActionResult GetAll()
     {
@@ -64,6 +65,7 @@ public class AccountController : ControllerBase // Controller is for MVC
     }
 
     // Untuk menangani request GET dengan route /api/[controller]/guid.
+    [Authorize(Roles = "admin, user, manager")]
     [HttpGet("{guid}")]
     public IActionResult GetByGuid(Guid guid)
     {
