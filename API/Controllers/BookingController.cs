@@ -192,4 +192,34 @@ public class BookingController : ControllerBase // ControllerBase untuk controll
         // Mengembalikan response 200 Ok dengan data bookingDetail
         return Ok(new ResponseOKHandler<BookingDetailDto>(bookingDetail));
     }
+
+    [HttpGet("booking-length")]
+    public IActionResult GetBookingLength()
+    {
+        // Mengambil semua data booking dan room dari repository
+        var bookings = _bookingRepository.GetAll();
+        var rooms = _roomRepository.GetAll();
+        
+        // Menggunakan LINQ untuk menggabungkan data dari booking dan room serta menghitung panjang peminjaman
+        var bookingLengths = from booking in bookings
+            join room in rooms on booking.RoomGuid equals room.Guid
+            let bookingDays = Enumerable.Range(0, (int)(booking.EndDate - booking.StartDate).TotalDays + 1)
+                .Select(offset => booking.StartDate.AddDays(offset))
+            where bookingDays.All(date => date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
+            select new BookingLengthDto
+            {
+                RoomGuid = room.Guid,
+                RoomName = room.Name,
+                BookingLength = bookingDays.Count()
+            };
+        
+        if (!bookingLengths.Any())
+        {
+            // Jika tidak ada data, maka akan mengembalikan response 404 Not Found
+            return NotFound(new ResponseNotFoundHandler("Data Not Found"));
+        }
+        
+        // Jika ada data bookingLengths, maka akan mengembalikan response 200 OK
+        return Ok(new ResponseOKHandler<IEnumerable<BookingLengthDto>>(bookingLengths));
+    }
 }
