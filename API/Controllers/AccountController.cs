@@ -16,7 +16,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+[Authorize] // Untuk menandakan bahwa controller ini membutuhkan autentikasi
 public class AccountController : ControllerBase // Controller is for MVC
 {
     private readonly IAccountRepository _accountRepository; // readonly is for dependency injection
