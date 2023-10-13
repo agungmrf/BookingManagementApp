@@ -1,0 +1,105 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = "_AdminLayout";
+}
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/International_Pok%C3%A9mon_logo.svg/2560px-International_Pok%C3%A9mon_logo.svg.png" class="rounded mx-auto d-block" width="500" height="200" alt="">
+<br>
+<table class="table table-striped table-hover" id="pokeTable">
+    <thead class="table-dark">
+    <tr>
+        <th>No</th>
+        <th>Nama</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody id="tbodyPoke">
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="modalPoke" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Data Pokemon GO</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <div class="col">
+                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                        <div id="carouselExample" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="" class="d-block w-100" alt="..." id="pokemonFirst">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="" class="d-block w-100" alt="..." id="pokemonSec">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="" class="d-block w-100" alt="..." id="pokemonThird">
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                    <div class="modalTypesContainer">
+                        <p id="modalTypes">
+                            <span class="type-background bg-orange">Type 1</span>
+                            <span class="type-background bg-blue">Type 2</span>
+                        </p>
+                    </div>
+                    <div class="pokemon-ability-info color-bg color-lightblue match active">
+                        <div class="column-7">
+                            <span class="attribute-title">Height</span>
+                            <span class="attribute-value" id="modalHeight">3' 11"</span>
+                            <span class="attribute-title">Weight</span>
+                            <span class="attribute-value" id="modalWeight">79.4 lbs</span>
+                            <span class="attribute-title">Gender</span>
+                            <span class="attribute-value" style="margin-bottom: 1em;" id="modalGender">Unknown</span>
+                        </div>
+                        <div class="column-7 push-7">
+                            <span class="attribute-title">Category</span>
+                            <span class="attribute-value" id="modalCategory">Paradox</span>
+                            <span class="attribute-title">Abilities</span>
+                            <span class="attribute-list">
+                                <a href="" class="moreInfo">
+                                    <span class="attribute-value" id="modalAbilities">Quark Drive</span>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="modalTypesContainer">
+                        <h6 class="type-background bg-pink">Moves</h6>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Moves</th>
+                            </tr>
+                            </thead>
+                            <tbody id="modalMoves">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+}

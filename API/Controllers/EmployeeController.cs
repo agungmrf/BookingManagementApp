@@ -4,13 +4,15 @@ using API.DTOs.Employees;
 using API.Models;
 using API.Utilities.Handler;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 [ApiController] // Untuk menunjukkan bahwa ini adalah controller API
 [Route("api/[controller]")] // Untuk menunjukkan route dari controller ini
-[Authorize]
+
+[EnableCors]
 public class EmployeeController : ControllerBase // ControllerBase untuk controller tanpa view
 {
     private readonly IEmployeeRepository _employeeRepository;

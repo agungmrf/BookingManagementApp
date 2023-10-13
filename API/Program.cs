@@ -53,7 +53,8 @@ builder.Services.AddCors(options =>
     {
         policy.AllowAnyOrigin(); // digunakan untuk memberikan akses ke semua origin
         policy.AllowAnyHeader(); // digunakan untuk memberikan akses ke semua header
-        policy.WithMethods("GET", "POST", "PUT", "DELETE"); // digunakan untuk memberikan akses ke semua method
+        //policy.WithMethods("GET", "POST", "PUT", "DELETE"); // digunakan untuk memberikan akses ke semua method
+        policy.AllowAnyMethod();
     });
 });
 
