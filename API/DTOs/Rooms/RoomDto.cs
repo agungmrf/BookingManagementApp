@@ -8,7 +8,7 @@ public class RoomDto
     public string Name { get; set; }
     public int Floor { get; set; }
     public int Capacity { get; set; }
-    
+
     public static explicit operator RoomDto(Room room) // Operator explicit untuk mengkonversi Room menjadi RoomDto.
     {
         return new RoomDto // Mengembalikan object RoomDto dengan data dari property Room.
@@ -19,7 +19,7 @@ public class RoomDto
             Capacity = room.Capacity
         };
     }
-    
+
     public static implicit operator Room(RoomDto roomDto) // Operator implicit untuk mengkonversi RoomDto menjadi Room.
     {
         return new Room // Mengembalikan object Room dengan data dari property RoomDto.

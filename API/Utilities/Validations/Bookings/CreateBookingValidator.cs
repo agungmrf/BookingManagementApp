@@ -13,12 +13,14 @@ public class CreateBookingValidator : AbstractValidator<CreateBookingDto>
 
         RuleFor(b => b.EndDate)
             .NotEmpty() // Validasi apakah EndDate tidak kosong
-            .GreaterThanOrEqualTo(b => b.StartDate.AddHours(+1)); // Validasi apakah EndDate lebih besar atau sama dengan StartDate.AddHours(+1)
+            .GreaterThanOrEqualTo(b =>
+                b.StartDate.AddHours(
+                    +1)); // Validasi apakah EndDate lebih besar atau sama dengan StartDate.AddHours(+1)
 
         RuleFor(b => b.Status)
             .NotNull() // Validasi apakah Status tidak null
             .IsInEnum(); // Validasi apakah Status berada di dalam enum
-        
+
         RuleFor(b => b.Remarks)
             .NotEmpty(); // Validasi apakah Remarks tidak kosong
 

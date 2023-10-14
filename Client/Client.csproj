@@ -7,12 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <AdditionalFiles Include="Views\Employee\Index.cshtml" />
-      <AdditionalFiles Include="Views\Shared\_AdminLayout.cshtml" />
+        <AdditionalFiles Include="Views\Employee\Index.cshtml"/>
+        <AdditionalFiles Include="Views\Shared\_AdminLayout.cshtml"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Moment.js" Version="2.29.4" />
+        <PackageReference Include="Moment.js" Version="2.29.4"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="wwwroot\plugins\js\"/>
     </ItemGroup>
 
 </Project>

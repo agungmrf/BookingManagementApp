@@ -6,5 +6,4 @@ namespace API.Contracts;
 // Memanggil <Account> karena IGeneralRepository membutuhkan TEntity sebagai sebuah model.
 public interface IAccountRepository : IGeneralRepository<Account>
 {
-    
 }

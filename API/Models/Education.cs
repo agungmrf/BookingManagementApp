@@ -7,17 +7,18 @@ public class Education : BaseEntity
 {
     [Column("major", TypeName = "nvarchar(100)")]
     public string Major { get; set; }
+
     [Column("degree", TypeName = "nvarchar(100)")]
     public string Degree { get; set; }
-    [Column("gpa")]
-    public float Gpa { get; set; }
-    [Column("university_guid")]
-    public Guid UniversityGuid { get; set; } // Foreign Key.
-    
+
+    [Column("gpa")] public float Gpa { get; set; }
+
+    [Column("university_guid")] public Guid UniversityGuid { get; set; } // Foreign Key.
+
     // Cardinality.
     // One Education has one University.
     public University? University { get; set; }
-    
+
     // One Education has one Employee.
     public Employee? Employee { get; set; }
 }

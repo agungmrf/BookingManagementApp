@@ -9,8 +9,10 @@ public class CreateEducationDto
     public string Degree { get; set; }
     public float Gpa { get; set; }
     public Guid UniversityGuid { get; set; }
-    
-    public static implicit operator Education(CreateEducationDto createEducationDto) // Operator implicit untuk mengkonversi CreateEducationDto menjadi Education.
+
+    public static implicit operator
+        Education(
+            CreateEducationDto createEducationDto) // Operator implicit untuk mengkonversi CreateEducationDto menjadi Education.
     {
         return new Education // Mengembalikan object Education dengan data dari property CreateEducationDto.
         {

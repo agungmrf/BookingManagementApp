@@ -9,7 +9,8 @@ public class AccountValidator : AbstractValidator<AccountDto>
     {
         RuleFor(a => a.Password)
             .NotEmpty() // Validasi agar password tidak kosong
-            .Matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"); // Validasi password harus mengandung huruf besar, huruf kecil, angka, dan simbol
+            .Matches(
+                "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"); // Validasi password harus mengandung huruf besar, huruf kecil, angka, dan simbol
 
         RuleFor(a => a.Otp)
             .NotEmpty(); // Validasi agar OTP tidak kosong

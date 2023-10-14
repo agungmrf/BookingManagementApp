@@ -9,7 +9,9 @@ public class CreateEmployeeValidator : AbstractValidator<CreateEmployeeDto>
     {
         RuleFor(e => e.FirstName)
             .NotEmpty() // Validasi agar FirstName tidak boleh kosong
-            .MaximumLength(100).WithMessage("First Name must be at most 100 characters"); // Validasi agar FirstName tidak boleh lebih dari 100 karakter
+            .MaximumLength(100)
+            .WithMessage(
+                "First Name must be at most 100 characters"); // Validasi agar FirstName tidak boleh lebih dari 100 karakter
 
         RuleFor(e => e.BirthDate)
             .NotEmpty() // Validasi agar BirthDate tidak boleh kosong
@@ -28,8 +30,13 @@ public class CreateEmployeeValidator : AbstractValidator<CreateEmployeeDto>
 
         RuleFor(e => e.PhoneNumber)
             .NotEmpty() // Validasi agar PhoneNumber tidak boleh kosong
-            .MinimumLength(10).WithMessage("Phone Number must be at least 10 characters") // Validasi agar PhoneNumber tidak boleh kurang dari 10 karakter
-            .MaximumLength(20).WithMessage("Phone Number must be at most 20 characters") // Validasi agar PhoneNumber tidak boleh lebih dari 20 karakter
-            .Matches("^(^\\+62|62|^08)(\\d{3,4}-?){2}\\d{3,4}$").WithMessage("Phone Number is not valid"); // Validasi agar PhoneNumber harus sesuai format nomor telepon
+            .MinimumLength(10)
+            .WithMessage(
+                "Phone Number must be at least 10 characters") // Validasi agar PhoneNumber tidak boleh kurang dari 10 karakter
+            .MaximumLength(20)
+            .WithMessage(
+                "Phone Number must be at most 20 characters") // Validasi agar PhoneNumber tidak boleh lebih dari 20 karakter
+            .Matches("^(^\\+62|62|^08)(\\d{3,4}-?){2}\\d{3,4}$")
+            .WithMessage("Phone Number is not valid"); // Validasi agar PhoneNumber harus sesuai format nomor telepon
     }
 }

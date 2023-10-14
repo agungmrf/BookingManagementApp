@@ -1,4 +1,3 @@
-using API.DTOs.Employees;
 using API.Models;
 using API.Utilities.Enums;
 
@@ -13,7 +12,8 @@ public class CreateBookingDto
     public Guid RoomGuid { get; set; }
     public Guid EmployeeGuid { get; set; }
 
-    public static implicit operator Booking(CreateBookingDto createBookingDto) // Operator implicit untuk mengkonversi CreateBookingDto menjadi Booking.
+    public static implicit operator
+        Booking(CreateBookingDto createBookingDto) // Operator implicit untuk mengkonversi CreateBookingDto menjadi Booking.
     {
         return new Booking // Mengembalikan object Booking dengan data dari property CreateBookingDto.
         {

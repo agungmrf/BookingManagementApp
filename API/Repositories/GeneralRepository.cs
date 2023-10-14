@@ -5,7 +5,7 @@ using API.Utilities.Handler;
 namespace API.Repositories;
 
 // Implementasi inheritance dari interface IGeneralRepository. where TEntity digunakan untuk memastikan bahwa TEntity adalah sebuah class.
-public class GeneralRepository<TEntity> : IGeneralRepository<TEntity> where TEntity : class 
+public class GeneralRepository<TEntity> : IGeneralRepository<TEntity> where TEntity : class
 {
     // Membuat constructor untuk menginisialisasi context.
     public readonly BookingManagementDbContext _context;
@@ -40,17 +40,11 @@ public class GeneralRepository<TEntity> : IGeneralRepository<TEntity> where TEnt
         catch (Exception ex)
         {
             if (ex.InnerException is not null && ex.InnerException.Message.Contains("IX_tb_m_employees_nik"))
-            {
                 throw new ExceptionHandler("NIK already exists");
-            }
             if (ex.InnerException is not null && ex.InnerException.Message.Contains("IX_tb_m_employees_email"))
-            {
                 throw new ExceptionHandler("Email already exists");
-            }
             if (ex.InnerException != null && ex.InnerException.Message.Contains("IX_tb_m_employees_phone_number"))
-            {
                 throw new ExceptionHandler("Phone number already exists");
-            }
             throw new ExceptionHandler(ex.InnerException?.Message ?? ex.Message);
         }
     }

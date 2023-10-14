@@ -5,11 +5,12 @@ namespace API.Utilities.Handlers;
 
 public class EmailHandler : IEmailHandler
 {
-    private string _server;
-    private int _port;
-    private string _fromEmailAdress;
-    
-    public EmailHandler(string server, int port, string fromEmailAdress) // Parameter yang dibutuhkan untuk mengirim email
+    private readonly string _fromEmailAdress;
+    private readonly int _port;
+    private readonly string _server;
+
+    public EmailHandler(string server, int port,
+        string fromEmailAdress) // Parameter yang dibutuhkan untuk mengirim email
     {
         _server = server; // Server email
         _port = port; // Port email
@@ -26,9 +27,9 @@ public class EmailHandler : IEmailHandler
             Body = body, // Body email
             IsBodyHtml = true // Body email berupa HTML
         };
-        
+
         message.To.Add(new MailAddress(toEmail)); // Untuk mngirim email ke email tujuan
-        
+
         using var smtpClient = new SmtpClient(_server, _port); // Membuat objek SmtpClient
         smtpClient.Send(message); // Mengirim email
     }

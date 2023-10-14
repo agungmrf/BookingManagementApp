@@ -11,11 +11,10 @@ namespace API.Controllers;
 [Route("api/[controller]")] // Untuk menunjukkan route dari controller ini
 public class RoomController : ControllerBase // ControllerBase untuk controller tanpa view
 {
-    private readonly IRoomRepository _roomRepository;
-
     // Repository untuk booked room today
     private readonly IBookingRepository _bookingRepository;
     private readonly IEmployeeRepository _employeeRepository;
+    private readonly IRoomRepository _roomRepository;
 
     public RoomController(IRoomRepository roomRepository, IBookingRepository bookingRepository,
         IEmployeeRepository employeeRepository)
@@ -32,10 +31,8 @@ public class RoomController : ControllerBase // ControllerBase untuk controller 
         // Mengambil semua data dari database.
         var result = _roomRepository.GetAll();
         if (!result.Any())
-        {
             // Jika tidak ada data, maka akan mengembalikan response 404 Not Found.
             return NotFound(new ResponseNotFoundHandler("Data Not Found"));
-        }
 
         // Mengubah IEnumerable<Room> menjadi IEnumerable<RoomDto>
         var data = result.Select(x => (RoomDto)x);
@@ -51,10 +48,8 @@ public class RoomController : ControllerBase // ControllerBase untuk controller 
         // Mengambil data dari database berdasarkan guid.
         var result = _roomRepository.GetByGuid(guid);
         if (result is null)
-        {
             // Jika tidak ada data, maka akan mengembalikan response 404 Not Found.
             return NotFound(new ResponseNotFoundHandler("Data Not Found"));
-        }
 
         // Jika ada data, maka akan mengembalikan response 200 OK.
         return Ok(new ResponseOKHandler<RoomDto>((RoomDto)result));
@@ -89,10 +84,8 @@ public class RoomController : ControllerBase // ControllerBase untuk controller 
             // Mengambil data di database berdasarkan guid.
             var entity = _roomRepository.GetByGuid(roomDto.Guid);
             if (entity is null)
-            {
                 // Jika tidak ada data, maka akan mengembalikan response 404 Not Found.
                 return NotFound(new ResponseNotFoundHandler("Data Not Found"));
-            }
 
             Room toUpdate = roomDto;
             toUpdate.CreatedDate = entity.CreatedDate; // Menyalin CreatedDate dari entity yang diambil dari database.
@@ -119,10 +112,7 @@ public class RoomController : ControllerBase // ControllerBase untuk controller 
         {
             // Mengambil data di database berdasarkan guid.
             var entity = _roomRepository.GetByGuid(guid);
-            if (entity is null)
-            {
-                return NotFound(new ResponseNotFoundHandler("Data Not Found"));
-            }
+            if (entity is null) return NotFound(new ResponseNotFoundHandler("Data Not Found"));
 
             // Menghapus data di database berdasarkan guid.
             _roomRepository.Delete(entity);
@@ -149,7 +139,7 @@ public class RoomController : ControllerBase // ControllerBase untuk controller 
 
         // Mendapatkan tanggal hari ini dalam format "dd-MM-yyyy"
         var today = DateTime.Today.Date;
-        
+
         // Mencari semua data booking yang dimulai pada tanggal hari ini
         var reservationRoomToday = from booking in bookings
             join employee in employees on booking.EmployeeGuid equals employee.Guid
@@ -167,10 +157,8 @@ public class RoomController : ControllerBase // ControllerBase untuk controller 
 
         // Periksa apakah ada data booking yang dimulai pada hari ini
         if (!reservationRoomToday.Any()) // Perbaikan pengecekan null
-        {
             // Jika tidak ada data, maka akan mengembalikan response 404 Not Found
             return NotFound(new ResponseNotFoundHandler("Data Not Found"));
-        }
 
         // Jika ada data booking yang dimulai hari ini, maka akan mengembalikan response 200 OK
         return Ok(new ResponseOKHandler<IEnumerable<RoomReservationDto>>(reservationRoomToday));
@@ -182,26 +170,23 @@ public class RoomController : ControllerBase // ControllerBase untuk controller 
         // Mendapatkan daftar semua booking dan room dari repository
         var bookings = _bookingRepository.GetAll();
         var rooms = _roomRepository.GetAll();
-            
+
         // Mendapatkan tanggal hari ini dalam format "dd-MM-yyyy"
         var today = DateTime.Today.Date;
-            
+
         // Menggunakan LINQ untuk mencari kamar yang tersedia hari ini
         var availableRoomToday = from booking in bookings
             join room in rooms on booking.RoomGuid equals room.Guid
             where booking.StartDate.Date == DateTime.Today
             select room;
-        
+
         // Menggunakan operator Except untuk mendapatkan kamar yang tidak terbooking hari ini
         var availableRooms = rooms.Except(availableRoomToday);
-        if (!availableRooms.Any())
-        {
-            return NotFound(new ResponseNotFoundHandler("No available rooms today"));
-        }
-        
+        if (!availableRooms.Any()) return NotFound(new ResponseNotFoundHandler("No available rooms today"));
+
         // Mengubah IEnumerable<Room> menjadi IEnumerable<RoomDto>
         var data = availableRooms.Select(x => (RoomDto)x);
-        
+
         // Untuk mengembalikan response 200 OK
         return Ok(new ResponseOKHandler<IEnumerable<RoomDto>>(data));
     }

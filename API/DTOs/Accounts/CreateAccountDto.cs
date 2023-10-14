@@ -10,7 +10,8 @@ public class CreateAccountDto
     public bool IsUsed { get; set; }
     public DateTime ExpiredDate { get; set; }
 
-    public static implicit operator Account(CreateAccountDto createAccountDto) // Operator implicit untuk mengkonversi CreateAccountDto menjadi Account.
+    public static implicit operator
+        Account(CreateAccountDto createAccountDto) // Operator implicit untuk mengkonversi CreateAccountDto menjadi Account.
     {
         return new Account // Mengembalikan object Account dengan data dari property CreateAccountDto.
         {

@@ -6,5 +6,5 @@ public interface IGenerateTokenHandler
 {
     // Untuk mengenerate token
     // Claim digunakan untuk menyimpan informasi user yang login
-    string Generate(IEnumerable<Claim> claims); 
+    string Generate(IEnumerable<Claim> claims);
 }

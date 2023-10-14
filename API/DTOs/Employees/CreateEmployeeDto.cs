@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using API.Models;
 using API.Utilities.Enums;
 
@@ -14,7 +13,8 @@ public class CreateEmployeeDto
     public string Email { get; set; }
     public string PhoneNumber { get; set; }
 
-    public static implicit operator Employee(CreateEmployeeDto createEmployeeDto) // Operator implicit untuk mengkonversi CreateEmployeeDto menjadi Employee.
+    public static implicit operator
+        Employee(CreateEmployeeDto createEmployeeDto) // Operator implicit untuk mengkonversi CreateEmployeeDto menjadi Employee.
     {
         return new Employee // Mengembalikan object Employee dengan data dari property CreateEmployeeDto.
         {

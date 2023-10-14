@@ -1,139 +1,147 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
 .color-bg {
-  border-radius: 10px;
-  background-color: #30a7d7; 
+    border-radius: 10px;
+    background-color: #30a7d7;
 }
 
 .pokemon-ability-info {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
 }
 
 .column-7 {
-  flex: 0 0 49%;
+    flex: 0 0 49%;
 }
 
 .column-7.push-7 {
-  flex: 0 0 49%;
+    flex: 0 0 49%;
 }
+
 .carousel-indicators {
-  width: 300px;
-  height: 295px;
-  padding-top: 272px;
-  margin: auto;
+    width: 300px;
+    height: 295px;
+    padding-top: 272px;
+    margin: auto;
 }
 
 .carousel-inner {
-  width: 300px;
-  height: 300px;
-  margin: auto;
+    width: 280px;
+    height: 280px;
+    margin: auto;
 }
 
 .carousel[data-bs-ride] {
-  height: 300px;
+    height: 300px;
 }
 
 .pokemon-ability-info-detail {
-  padding: 10px;
-  width: 100%;
+    padding: 10px;
+    width: 100%;
 }
 
-.button-close {
-  text-align: right;
-  padding: 10px;
+.close {
+    float: right;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    opacity: .5;
 }
 
-.carousel-control-prev, .carousel-control-next {
-  width: auto;
+.button.close {
+    padding: 0;
+    background-color: transparent;
+    border: 0;
 }
 
 .dtm-type {
-  margin-top: 20px;
-  padding: 10px; 
+    margin-top: 20px;
+    padding: 10px;
 }
 
 
 .type-background.bg-orange {
-  background-color: #9bcc50;
-  font-family: "Flexo-Medium", arial, sans-serif;
-  padding: 5px 50px; 
-  margin-right: 10px;
-  border-radius: 5px;
-  color: #212121;
+    background-color: #9bcc50;
+    font-family: "Flexo-Medium", arial, sans-serif;
+    padding: 5px 50px;
+    margin-right: 10px;
+    border-radius: 5px;
+    color: #212121;
 }
 
 .type-background.bg-pink {
-  background-color: deeppink;
-  font-family: "Flexo-Medium", arial, sans-serif;
-  padding: 5px 10px;
-  margin-top: 10px;
-  margin-right: 10px;
-  border-radius: 5px;
-  color: #212121;
+    background-color: deeppink;
+    font-family: "Flexo-Medium", arial, sans-serif;
+    padding: 5px 10px;
+    margin-top: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    color: #212121;
 }
 
 .type-background.bg-blue {
-  background-color: #a4acaf;
-  font-family: "Flexo-Medium", arial, sans-serif;
-  padding: 5px 50px; 
-  margin-right: 10px;
-  border-radius: 5px;
-  color: #212121;
+    background-color: #a4acaf;
+    font-family: "Flexo-Medium", arial, sans-serif;
+    padding: 5px 50px;
+    margin-right: 10px;
+    border-radius: 5px;
+    color: #212121;
 }
 
 #modalTypesContainer {
-  display: flex;
-  justify-content: center; 
-  align-items: center;
-  height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 
 #modalTypes {
-  text-align: center; 
+    text-align: center;
 }
 
-.pokemon-ability-info .attribute-title{
-  font-family: "Flexo-Medium",arial,sans-serif;
-  clear: both;
-  color: #fff;
-  float: left;
-  font-size: 100%;
-  margin: 0.25em 0 0 1.25em;
-  text-transform: none;
-  white-space: normal;
-  word-break: break-word;
+.pokemon-ability-info .attribute-title {
+    font-family: "Flexo-Medium", arial, sans-serif;
+    clear: both;
+    color: #fff;
+    float: left;
+    font-size: 100%;
+    margin: 0.25em 0 0 1.25em;
+    text-transform: none;
+    white-space: normal;
+    word-break: break-word;
 }
 
 .pokemon-ability-info .attribute-value {
-  font-family: "Flexo-Medium",arial,sans-serif;
-  clear: both;
-  color: #212121;
-  float: left;
-  font-size: 100%;
-  margin: 0.25em 0 0 1.25em;
-  white-space: normal;
-  word-break: break-word;
+    font-family: "Flexo-Medium", arial, sans-serif;
+    clear: both;
+    color: #212121;
+    float: left;
+    font-size: 100%;
+    margin: 0.25em 0 0 1.25em;
+    white-space: normal;
+    word-break: break-word;
 }

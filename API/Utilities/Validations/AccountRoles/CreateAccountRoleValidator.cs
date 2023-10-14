@@ -5,7 +5,7 @@ namespace API.Utilities.Validations.AccountRoles;
 
 public class CreateAccountRoleValidator : AbstractValidator<CreateAccountRoleDto>
 {
-    public CreateAccountRoleValidator() 
+    public CreateAccountRoleValidator()
     {
         RuleFor(acc => acc.AccountGuid)
             .NotEmpty(); // Validasi agar AccountGuid tidak boleh kosong

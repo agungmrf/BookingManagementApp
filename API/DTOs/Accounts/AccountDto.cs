@@ -9,8 +9,9 @@ public class AccountDto
     public int Otp { get; set; }
     public bool IsUsed { get; set; }
     public DateTime ExpiredDate { get; set; }
-    
-    public static explicit operator AccountDto(Account account) // Operator explicit untuk mengkonversi Account menjadi AccountDto.
+
+    public static explicit operator
+        AccountDto(Account account) // Operator explicit untuk mengkonversi Account menjadi AccountDto.
     {
         return new AccountDto // Mengembalikan object AccountDto dengan data dari property Account.
         {
@@ -21,8 +22,9 @@ public class AccountDto
             ExpiredDate = account.ExpiredDate
         };
     }
-    
-    public static implicit operator Account(AccountDto accountDto) // Operator implicit untuk mengkonversi AccountDto menjadi Account.
+
+    public static implicit operator
+        Account(AccountDto accountDto) // Operator implicit untuk mengkonversi AccountDto menjadi Account.
     {
         return new Account // Mengembalikan object Account dengan data dari property AccountDto.
         {

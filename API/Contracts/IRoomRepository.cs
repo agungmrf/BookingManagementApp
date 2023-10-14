@@ -6,5 +6,4 @@ namespace API.Contracts;
 // Memanggil <Room> karena IGeneralRepository membutuhkan TEntity sebagai sebuah model.
 public interface IRoomRepository : IGeneralRepository<Room>
 {
-    
 }

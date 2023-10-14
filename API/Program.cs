@@ -35,12 +35,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.RequireHttpsMetadata = false; // for development only
         options.SaveToken = true;
-        options.TokenValidationParameters = new TokenValidationParameters {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
             ValidateIssuer = true,
             ValidIssuer = builder.Configuration["JWTService:Issuer"],
             ValidateAudience = true,
             ValidAudience = builder.Configuration["JWTService:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTService:SecretKey"])),
+            IssuerSigningKey =
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTService:SecretKey"])),
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero
         };
@@ -97,13 +99,16 @@ builder.Services.AddControllers()
     });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(x => {
-    x.SwaggerDoc("v1", new OpenApiInfo {
+builder.Services.AddSwaggerGen(x =>
+{
+    x.SwaggerDoc("v1", new OpenApiInfo
+    {
         Version = "v1",
         Title = "DTS Coding Camp",
         Description = "ASP.NET Core API 6.0"
     });
-    x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+    x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
         Name = "Authorization",
         Type = SecuritySchemeType.Http,
         Scheme = "Bearer",
@@ -128,7 +133,7 @@ builder.Services.AddSwaggerGen(x => {
 });
 
 
-var app = builder.Build();  
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

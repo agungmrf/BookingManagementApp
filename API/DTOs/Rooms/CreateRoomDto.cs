@@ -7,8 +7,9 @@ public class CreateRoomDto
     public string Name { get; set; }
     public int Floor { get; set; }
     public int Capacity { get; set; }
-    
-    public static implicit operator Room(CreateRoomDto createRoomDto) // Operator implicit untuk mengkonversi CreateRoomDto menjadi Room.
+
+    public static implicit operator
+        Room(CreateRoomDto createRoomDto) // Operator implicit untuk mengkonversi CreateRoomDto menjadi Room.
     {
         return new Room // Mengembalikan object Room dengan data dari property CreateRoomDto.
         {

@@ -2,7 +2,7 @@
 
 $(document).ready(() => {
     $('#pokeTable').DataTable({
-        ordering: false,
+        ordering: true,
         ajax: {
             url: 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=2000',
             dataSrc: 'results'
@@ -43,7 +43,7 @@ function detail(stringUrl) {
         const abilities = res.abilities.map(ability => ability.ability.name).join(', ');
 
         const types = res.types.map(type => type.type.name).join(', ');
-        
+
         $("#modalHeight").text(height);
         $("#modalWeight").text(weight);
         $("#modalGender").text(gender);
@@ -51,6 +51,12 @@ function detail(stringUrl) {
         $("#modalAbilities").text(abilities);
         $("#modalTypes").html(`<span class="type-background bg-orange">${types.split(',')[0]}</span><span class="type-background bg-blue">${types.split(',')[1]}</span>`);
 
+        $("#hp").css("width", res.stats[0].base_stat + "%").html("HP : " + res.stats[0].base_stat);
+        $("#attack").css("width", res.stats[1].base_stat + "%").html("Attack : " + res.stats[1].base_stat);
+        $("#defense").css("width", res.stats[2].base_stat + "%").html("Defense : " + res.stats[2].base_stat);
+        $("#special-attack").css("width", res.stats[3].base_stat + "%").html("Spesial Attack : " + res.stats[3].base_stat);
+        $("#special-defense").css("width", res.stats[4].base_stat + "%").html("Spesial Defense : " + res.stats[4].base_stat);
+        $("#speed").css("width", res.stats[5].base_stat + "%").html("Speed : " + res.stats[5].base_stat);
         const moves = res.moves;
         let movesHTML = "";
         for (let i = 0; i < moves.length; i++) {

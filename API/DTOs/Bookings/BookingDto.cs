@@ -12,8 +12,9 @@ public class BookingDto
     public string Remarks { get; set; }
     public Guid RoomGuid { get; set; }
     public Guid EmployeeGuid { get; set; }
-    
-    public static explicit operator BookingDto(Booking booking) // Operator explicit untuk mengkonversi Booking menjadi BookingDto.
+
+    public static explicit operator
+        BookingDto(Booking booking) // Operator explicit untuk mengkonversi Booking menjadi BookingDto.
     {
         return new BookingDto // Mengembalikan object BookingDto dengan data dari property Booking.
         {
@@ -26,8 +27,9 @@ public class BookingDto
             EmployeeGuid = booking.EmployeeGuid
         };
     }
-    
-    public static implicit operator Booking(BookingDto bookingDto) // Operator implicit untuk mengkonversi BookingDto menjadi Booking.
+
+    public static implicit operator
+        Booking(BookingDto bookingDto) // Operator implicit untuk mengkonversi BookingDto menjadi Booking.
     {
         return new Booking // Mengembalikan object Booking dengan data dari property BookingDto.
         {

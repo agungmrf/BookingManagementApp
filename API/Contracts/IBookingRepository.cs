@@ -6,5 +6,4 @@ namespace API.Contracts;
 // Memanggil <Booking> karena IGeneralRepository membutuhkan TEntity sebagai sebuah model.
 public interface IBookingRepository : IGeneralRepository<Booking>
 {
-    
 }

@@ -6,5 +6,4 @@ namespace API.Contracts;
 // Memanggil <Education> karena IGeneralRepository membutuhkan TEntity sebagai sebuah model.
 public interface IEducationRepository : IGeneralRepository<Education>
 {
-    
 }
