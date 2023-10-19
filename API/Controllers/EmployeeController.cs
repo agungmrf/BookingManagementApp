@@ -9,7 +9,7 @@ namespace API.Controllers;
 
 [ApiController] // Untuk menunjukkan bahwa ini adalah controller API
 [Route("api/[controller]")] // Untuk menunjukkan route dari controller ini
-[EnableCors]
+//[EnableCors]
 public class EmployeeController : ControllerBase // ControllerBase untuk controller tanpa view
 {
     private readonly IEducationRepository _educationRepository;

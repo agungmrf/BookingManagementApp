@@ -1,6 +1,4 @@
-﻿$("h1").html("Pokemon GO");
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     $('#pokeTable').DataTable({
         ordering: true,
         ajax: {

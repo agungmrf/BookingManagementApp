@@ -50,9 +50,9 @@ $(document).ready(function () {
             {data: "email"},
             {data: "phoneNumber"},
             {
-                data: '',
+                data: null,
                 render: function (data, type, row) {
-                    return `<button onclick="Update('${row.url}')" data-bs-toggle="modal" data-bs-target="" class="btn btn-warning btn-circle btn-sm"><i class="fas fa-edit"></i> </button>
+                    return `<button onclick="UpdateGet('${row.url}')" data-bs-toggle="modal" data-bs-target="#employeeModalUpdate" class="btn btn-warning btn-circle btn-sm"><i class="fas fa-edit"></i> </button>
                     <button onclick="Delete('${row.guid}')" data-bs-toggle="modal" data-bs-target="" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i> </button>`;
                 }
             }
@@ -138,46 +138,114 @@ function Insert() {
         contentType: "application/json",
         dataType: "json"
     }).done((result) => {
-        alert("Success add Employee");
+        Swal.fire(
+            'Successfull',
+            'Employee data was added successfully.',
+            'success'
+        );
+        // Reload the table
+        $('#employeeTable').DataTable().ajax.reload();
     }).fail((error) => {
-        alert("Error add Employee");
-    })
+        Swal.fire(
+            'Error',
+            'Failed to add employee data. Please try again.',
+            'error'
+        );
+    });
 }
 
 function Delete(guid) {
-    if (confirm("Apakah anda yakin ingin menghapus data ini?")) {
-        $.ajax({
-            url: "http://localhost:5032/api/Employee/?guid=" + guid,
-            type: "DELETE",
-            contentType: "application/json",
-            dataType: "json"
-        }).done((result) => {
-            alert("Data employee berhasil dihapus.");
-            // Reload the table
-            $('#employeeTable').DataTable().ajax.reload();
-        }).fail((error) => {
-            alert("Data employee gagal dihapus.");
-        });
-    }
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Lakukan penghapusan
+            $.ajax({
+                url: "http://localhost:5032/api/Employee/?guid=" + guid,
+                type: "DELETE",
+                contentType: "application/json",
+                dataType: "json"
+            }).done((result) => {
+                Swal.fire(
+                    'Successfull',
+                    'Employee data was successfully deleted.',
+                    'success'
+                );
+                // Reload the table
+                $('#employeeTable').DataTable().ajax.reload();
+            }).fail((error) => {
+                Swal.fire(
+                    'Error',
+                    'Employee data failed to be deleted, please try again.',
+                    'error'
+                );
+            });
+        }
+    });
 }
 
-function Update(url) {
+function UpdateGet(data) {
     $.ajax({
-        url: url,
+        url: "http://localhost:5032/api/Employee/" + data, // Sesuaikan URL dengan endpoint API yang benar
         type: "GET",
+        contentType: "application/json",
         dataType: "json"
-    }).done((employee) => {
-        $("#firstname").val(employee.FirstName);
-        $("#lastname").val(employee.LastName);
-        $("#birthdate").val(employee.BirthDate);
-        $("#gender").val(employee.Gender);
-        $("#hiringdate").val(employee.HiringDate);
-        $("#email").val(employee.Email);
-        $("#phonenumber").val(employee.PhoneNumber);
+    }).done(res => {
+        $('#UGuid').val(res.data.guid);
+        $('#UNik').val(res.data.nik);
+        $('#update_firstname').val(res.data.firstName);
+        $('#update_lastname').val(res.data.lastName);
+        $('#update_birthdate').val(moment(res.data.birthDate).format('DD-MM-YYYY'));
+        $('#update_gender').val(res.data.gender === 0 ? "Female" : "Male");
+        $('#update_hiringdate').val(moment(res.data.hiringDate).format('DD-MM-YYYY'));
+        $('#update_email').val(res.data.email);
+        $('#update_phonenumber').val(res.data.phoneNumber);
+    }).fail(error => {
+        alert("Insert failed")
+    });
+}
 
-        // Show the modal for editing
-        $('#employeeModal').modal('show');
-    }).fail((error) => {
-        alert("Error fetching employee data for update.");
+function UpdateEmployee() {
+    var obj = {
+        guid: $('#UGuid').val(),
+        nik: $('#UNik').val(),
+        firstName: $("#update_firstname").val(),
+        lastName: $("#update_lastname").val(),
+        birthDate: $("#update_birthdate").val(),
+        gender: ($('#update_gender').val() === "Female") ? 0 : 1,
+        hiringDate: $("#update_hiringdate").val(),
+        email: $("#update_email").val(),
+        phoneNumber: $("#update_phonenumber").val()
+    };
+
+    $.ajax({
+        url: "http://localhost:5032/api/Employee/", // Sesuaikan URL dengan endpoint API yang benar
+        type: "PUT",
+        data: JSON.stringify(obj),
+        contentType: "application/json",
+        //dataType: "json"
+    }).done(result => {
+        // Tambahkan kode untuk menampilkan pemberitahuan jika berhasil
+        Swal.fire(
+            'Good job!',
+            'Data has been successfuly updated!',
+            'success'
+        ).then(() => {
+            location.reload(); // Mereset form
+        });
+
+    }).fail(error => {
+        // Tambahkan kode untuk menampilkan pemberitahuan jika gagal
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Failed to update data! Please try again.'
+        })
     });
 }

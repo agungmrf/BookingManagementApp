@@ -15,7 +15,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize] // Untuk menandakan bahwa controller ini membutuhkan autentikasi
+//[Authorize] // Untuk menandakan bahwa controller ini membutuhkan autentikasi
 public class AccountController : ControllerBase // Controller is for MVC
 {
     private readonly IAccountRepository _accountRepository; // readonly is for dependency injection
@@ -46,7 +46,7 @@ public class AccountController : ControllerBase // Controller is for MVC
     }
 
     // Untuk menangani request GET dengan route /api/[controller].
-    [Authorize(Roles = "admin")]
+    //[Authorize(Roles = "admin")]
     [HttpGet]
     public IActionResult GetAll()
     {
@@ -64,7 +64,7 @@ public class AccountController : ControllerBase // Controller is for MVC
     }
 
     // Untuk menangani request GET dengan route /api/[controller]/guid.
-    [Authorize(Roles = "admin, user, manager")]
+    //[Authorize(Roles = "admin, user, manager")]
     [HttpGet("{guid}")]
     public IActionResult GetByGuid(Guid guid)
     {
